@@ -52,19 +52,21 @@ export const Trips = () => {
           <div className="flex justify-center gap-2 mt-6">
             <Button
               variant={viewMode === 'grid' ? 'outline' : 'ghost'}
-              size="sm"
+              size="default"
               onClick={() => setViewMode('grid')}
+              className="min-h-[44px] touch-manipulation"
             >
-              <Grid3x3 className="h-4 w-4 mr-2" />
-              Grid Prikaz
+              <Grid3x3 className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Grid Prikaz</span>
             </Button>
             <Button
               variant={viewMode === 'gallery' ? 'outline' : 'ghost'}
-              size="sm"
+              size="default"
               onClick={() => setViewMode('gallery')}
+              className="min-h-[44px] touch-manipulation"
             >
-              <Images className="h-4 w-4 mr-2" />
-              Galerija
+              <Images className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Galerija</span>
             </Button>
           </div>
         </div>
@@ -72,14 +74,16 @@ export const Trips = () => {
         {viewMode === 'gallery' ? (
           <TripsGallery />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {trips.map((trip) => (
-              <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+              <Card key={trip.id} className="overflow-hidden hover:shadow-lg active:shadow-xl active:scale-[0.98] transition-all touch-manipulation">
                 <div className="aspect-[4/3] overflow-hidden">
                   <img 
                     src={trip.image} 
                     alt={trip.title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-full object-cover hover:scale-105 active:scale-110 transition-transform duration-300"
                   />
                 </div>
                 <CardHeader>

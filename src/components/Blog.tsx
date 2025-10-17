@@ -36,9 +36,9 @@ export const Blog = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 max-w-6xl mx-auto">
           {posts.map((post) => (
-            <Card key={post.id} className="hover:shadow-lg transition-shadow">
+            <Card key={post.id} className="hover:shadow-lg active:shadow-xl active:scale-[0.98] transition-all touch-manipulation">
               <CardHeader>
                 <CardTitle className="text-xl">{post.title}</CardTitle>
                 <CardDescription className="text-sm">{post.date}</CardDescription>
