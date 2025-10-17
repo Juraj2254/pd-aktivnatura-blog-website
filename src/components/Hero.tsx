@@ -21,7 +21,7 @@ export const Hero = () => {
           Pridruži se AktivNatura klubu i istraži najljepše planine Hrvatske
         </p>
         <Button variant="hero" size="lg" className="text-lg">
-          Pridruži se sada
+          Pogledaj kalendar izleta
         </Button>
       </div>
     </section>
