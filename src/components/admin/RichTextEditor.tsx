@@ -50,7 +50,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface RichTextEditorProps {
@@ -95,6 +95,21 @@ export function RichTextEditor({
       onChange(editor.getHTML());
     },
   });
+
+  // Force re-render toolbar on selection or transaction changes so isActive() stays in sync
+  const [toolbarRefreshKey, setToolbarRefreshKey] = useState(0);
+  useEffect(() => {
+    if (!editor) return;
+    const onChange = () => setToolbarRefreshKey((k) => k + 1);
+    editor.on('selectionUpdate', onChange);
+    editor.on('transaction', onChange);
+    editor.on('update', onChange);
+    return () => {
+      editor.off('selectionUpdate', onChange);
+      editor.off('transaction', onChange);
+      editor.off('update', onChange);
+    };
+  }, [editor]);
 
   const addLink = useCallback(() => {
     if (!editor) return;
@@ -168,7 +183,7 @@ export function RichTextEditor({
   return (
     <div className="w-full max-w-4xl border border-input rounded-md bg-background">
       {/* Toolbar */}
-      <div className="border-b border-input p-1.5 sm:p-2 flex flex-wrap gap-0.5 sm:gap-1 sticky top-0 z-10 bg-background">
+      <div key={toolbarRefreshKey} className="border-b border-input p-1.5 sm:p-2 flex flex-wrap gap-0.5 sm:gap-1 sticky top-0 z-10 bg-background">
         {/* Text Formatting */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input">
           <MenuButton
