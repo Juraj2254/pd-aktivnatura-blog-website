@@ -156,8 +156,8 @@ export function RichTextEditor({
       size="sm"
       onClick={onClick}
       className={cn(
-        "h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent",
-        isActive && "bg-accent text-accent-foreground"
+        "h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent transition-all",
+        isActive && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm ring-1 ring-primary/20"
       )}
       title={title}
     >
