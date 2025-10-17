@@ -104,10 +104,14 @@ export function RichTextEditor({
     editor.on('selectionUpdate', onChange);
     editor.on('transaction', onChange);
     editor.on('update', onChange);
+    editor.on('focus', onChange);
+    editor.on('blur', onChange);
     return () => {
       editor.off('selectionUpdate', onChange);
       editor.off('transaction', onChange);
       editor.off('update', onChange);
+      editor.off('focus', onChange);
+      editor.off('blur', onChange);
     };
   }, [editor]);
 
@@ -170,8 +174,10 @@ export function RichTextEditor({
       variant="ghost"
       size="sm"
       onClick={onClick}
+      aria-pressed={isActive}
+      data-state={isActive ? "on" : "off"}
       className={cn(
-        "h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent transition-all",
+        "h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent transition-all focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background",
         isActive && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm ring-1 ring-primary/20"
       )}
       title={title}
@@ -223,7 +229,7 @@ export function RichTextEditor({
               <Type className="h-3 w-3 mr-1" />
               <SelectValue placeholder="Size" />
             </SelectTrigger>
-            <SelectContent side="bottom" align="start" className="bg-popover z-50">
+            <SelectContent side="bottom" align="start" className="z-50">
               <SelectItem value="12px">12px</SelectItem>
               <SelectItem value="16px">16px</SelectItem>
               <SelectItem value="20px">20px</SelectItem>
