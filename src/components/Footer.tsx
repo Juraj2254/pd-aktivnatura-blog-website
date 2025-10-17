@@ -1,4 +1,5 @@
-import { Mountain, Facebook, Instagram, Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
+import logo from "@/assets/logo.png";
 
 export const Footer = () => {
   return (
@@ -6,8 +7,8 @@ export const Footer = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center gap-6">
           {/* Logo */}
-          <div className="flex items-center gap-2">
-            <Mountain className="h-8 w-8" />
+          <div className="flex items-center gap-3">
+            <img src={logo} alt="AktivNatura Logo" className="h-10 w-auto" />
             <span className="text-xl font-bold">AktivNatura</span>
           </div>
 
