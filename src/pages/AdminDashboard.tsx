@@ -86,8 +86,8 @@ const AdminDashboard = () => {
     switch (currentView) {
       case "create-blog":
         return (
-          <div>
-            <h1 className="text-3xl font-bold mb-6">Kreiraj Blog Post</h1>
+          <div className="max-w-4xl">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Blog Post</h1>
             <CreateBlogForm />
           </div>
         );
@@ -95,8 +95,8 @@ const AdminDashboard = () => {
         return <EditBlogsList />;
       case "create-trip":
         return (
-          <div>
-            <h1 className="text-3xl font-bold mb-6">Kreiraj Izlet</h1>
+          <div className="max-w-4xl">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Izlet</h1>
             <CreateTripForm />
           </div>
         );
@@ -104,9 +104,9 @@ const AdminDashboard = () => {
         return <EditTripsList />;
       default:
         return (
-          <div>
-            <h1 className="text-3xl font-bold mb-4">Dobrodošli u Admin Panel</h1>
-            <p className="text-muted-foreground">
+          <div className="max-w-4xl">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Dobrodošli u Admin Panel</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">
               Odaberite opciju iz sidebar-a za upravljanje sadržajem.
             </p>
           </div>
@@ -120,12 +120,12 @@ const AdminDashboard = () => {
         <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
         
         <div className="flex-1 flex flex-col">
-          <header className="h-14 flex items-center border-b border-border px-6 bg-background">
+          <header className="h-12 sm:h-14 flex items-center border-b border-border px-3 sm:px-6 bg-background">
             <SidebarTrigger />
-            <h2 className="ml-4 text-lg font-semibold">Admin Dashboard</h2>
+            <h2 className="ml-2 sm:ml-4 text-base sm:text-lg font-semibold truncate">Admin Dashboard</h2>
           </header>
           
-          <main className="flex-1 p-8 bg-background overflow-auto">
+          <main className="flex-1 p-3 sm:p-6 lg:p-8 bg-background overflow-auto">
             {renderContent()}
           </main>
         </div>

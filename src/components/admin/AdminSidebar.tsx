@@ -12,6 +12,7 @@ import {
   SidebarMenuItem,
   SidebarHeader,
   SidebarFooter,
+  useSidebar,
 } from "@/components/ui/sidebar";
 
 interface AdminSidebarProps {
@@ -21,6 +22,7 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
   const navigate = useNavigate();
+  const { open } = useSidebar();
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -28,21 +30,23 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
   };
 
   return (
-    <Sidebar>
-      <SidebarHeader className="border-b border-sidebar-border p-4">
-        <h2 className="text-lg font-semibold text-sidebar-foreground">Admin Panel</h2>
+    <Sidebar collapsible="offcanvas">
+      <SidebarHeader className="border-b border-sidebar-border p-3 sm:p-4">
+        <h2 className="text-base sm:text-lg font-semibold text-sidebar-foreground truncate">
+          {open ? "Admin Panel" : "AP"}
+        </h2>
       </SidebarHeader>
       
-      <SidebarContent>
+      <SidebarContent className="px-2">
         <SidebarGroup>
-          <SidebarGroupLabel>Navigacija</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs sm:text-sm px-2">Navigacija</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link to="/">
-                    <Home className="mr-2 h-4 w-4" />
-                    <span>Početna stranica</span>
+                <SidebarMenuButton asChild tooltip={!open ? "Početna stranica" : undefined}>
+                  <Link to="/" className="text-sm">
+                    <Home className="h-4 w-4" />
+                    {open && <span className="ml-2">Početna stranica</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -51,25 +55,29 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Blog Postovi</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs sm:text-sm px-2">Blog Postovi</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => onViewChange("create-blog")}
                   isActive={currentView === "create-blog"}
+                  tooltip={!open ? "Kreiraj Blog" : undefined}
+                  className="text-sm"
                 >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>Kreiraj Blog</span>
+                  <PlusCircle className="h-4 w-4" />
+                  {open && <span className="ml-2">Kreiraj Blog</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => onViewChange("edit-blogs")}
                   isActive={currentView === "edit-blogs"}
+                  tooltip={!open ? "Uredi Blogove" : undefined}
+                  className="text-sm"
                 >
-                  <Edit className="mr-2 h-4 w-4" />
-                  <span>Uredi Blogove</span>
+                  <Edit className="h-4 w-4" />
+                  {open && <span className="ml-2">Uredi Blogove</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -77,25 +85,29 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
         </SidebarGroup>
 
         <SidebarGroup>
-          <SidebarGroupLabel>Izleti</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-xs sm:text-sm px-2">Izleti</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => onViewChange("create-trip")}
                   isActive={currentView === "create-trip"}
+                  tooltip={!open ? "Kreiraj Izlet" : undefined}
+                  className="text-sm"
                 >
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  <span>Kreiraj Izlet</span>
+                  <PlusCircle className="h-4 w-4" />
+                  {open && <span className="ml-2">Kreiraj Izlet</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={() => onViewChange("edit-trips")}
                   isActive={currentView === "edit-trips"}
+                  tooltip={!open ? "Uredi Izlete" : undefined}
+                  className="text-sm"
                 >
-                  <Edit className="mr-2 h-4 w-4" />
-                  <span>Uredi Izlete</span>
+                  <Edit className="h-4 w-4" />
+                  {open && <span className="ml-2">Uredi Izlete</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -103,12 +115,12 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-sidebar-border p-4">
+      <SidebarFooter className="border-t border-sidebar-border p-3 sm:p-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={handleSignOut}>
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Odjavi se</span>
+            <SidebarMenuButton onClick={handleSignOut} tooltip={!open ? "Odjavi se" : undefined} className="text-sm">
+              <LogOut className="h-4 w-4" />
+              {open && <span className="ml-2">Odjavi se</span>}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
