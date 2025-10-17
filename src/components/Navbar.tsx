@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Menu, X, Mountain } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/logo.png";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +23,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 font-bold text-xl text-primary hover:text-primary/80 transition-colors">
-            <Mountain className="h-6 w-6" />
+            <img src={logo} alt="AktivNatura" className="h-8 w-8" />
             <span className="hidden sm:inline">AktivNatura</span>
           </Link>
 
