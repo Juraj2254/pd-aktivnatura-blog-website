@@ -79,7 +79,7 @@ export const Contact = () => {
               />
             </div>
 
-            <Button type="submit" size="lg" className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+            <Button type="submit" size="lg" className="w-full bg-[#f81212] text-white hover:bg-[#f81212]/90">
               Pošalji poruku
             </Button>
           </form>
