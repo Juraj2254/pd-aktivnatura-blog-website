@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Phone } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
@@ -40,8 +40,9 @@ export const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <Button variant="hero" size="sm">
-              Pridruži se
+            <Button variant="hero" size="sm" className="bg-[#F70000] hover:bg-[#F70000]/90 text-white">
+              <Phone className="h-4 w-4" />
+              Nazovi nas
             </Button>
           </div>
 
@@ -71,8 +72,9 @@ export const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button variant="hero" size="sm" className="w-full">
-                Pridruži se
+              <Button variant="hero" size="sm" className="w-full bg-[#F70000] hover:bg-[#F70000]/90 text-white">
+                <Phone className="h-4 w-4" />
+                Nazovi nas
               </Button>
             </div>
           </div>
