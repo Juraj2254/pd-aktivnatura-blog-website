@@ -3,20 +3,29 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
+import { EditTripModal } from "./EditTripModal";
 
 interface Trip {
   id: string;
   title: string;
   slug: string;
-  description: string;
-  location: string;
+  description: string | null;
+  content: string | null;
+  location: string | null;
+  duration: string | null;
+  difficulty: string | null;
+  price: number | null;
+  max_participants: number | null;
+  featured_image: string | null;
   published: boolean;
 }
 
 export function EditTripsList() {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -27,7 +36,7 @@ export function EditTripsList() {
     try {
       const { data, error } = await supabase
         .from("trips")
-        .select("id, title, slug, description, location, published")
+        .select("*")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -41,6 +50,11 @@ export function EditTripsList() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (trip: Trip) => {
+    setSelectedTrip(trip);
+    setIsEditModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -121,6 +135,14 @@ export function EditTripsList() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => handleEdit(trip)}
+                  >
+                    <Edit className="h-4 w-4 mr-1" />
+                    Uredi
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => togglePublish(trip.id, trip.published)}
                   >
                     {trip.published ? "Sakrij" : "Objavi"}
@@ -137,6 +159,15 @@ export function EditTripsList() {
             </Card>
           ))}
         </div>
+      )}
+      
+      {selectedTrip && (
+        <EditTripModal
+          trip={selectedTrip}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          onSuccess={fetchTrips}
+        />
       )}
     </div>
   );

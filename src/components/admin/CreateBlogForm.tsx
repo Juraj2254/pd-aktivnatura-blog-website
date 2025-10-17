@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { RichTextEditor } from "./RichTextEditor";
 
 export function CreateBlogForm() {
   const [title, setTitle] = useState("");
@@ -57,7 +58,7 @@ export function CreateBlogForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-2xl">
+    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
       <div>
         <Label htmlFor="title">Naslov</Label>
         <Input
@@ -91,12 +92,10 @@ export function CreateBlogForm() {
 
       <div>
         <Label htmlFor="content">Sadržaj</Label>
-        <Textarea
-          id="content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-          rows={10}
+        <RichTextEditor
+          content={content}
+          onChange={setContent}
+          placeholder="Napiši sadržaj bloga ovdje..."
         />
       </div>
 

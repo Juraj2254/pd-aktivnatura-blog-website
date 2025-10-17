@@ -4,18 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Edit, Trash2 } from "lucide-react";
+import { EditBlogModal } from "./EditBlogModal";
 
 interface BlogPost {
   id: string;
   title: string;
   slug: string;
-  excerpt: string;
+  excerpt: string | null;
+  content: string;
+  featured_image: string | null;
   published: boolean;
 }
 
 export function EditBlogsList() {
   const [blogs, setBlogs] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedBlog, setSelectedBlog] = useState<BlogPost | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -26,7 +31,7 @@ export function EditBlogsList() {
     try {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("id, title, slug, excerpt, published")
+        .select("id, title, slug, excerpt, content, featured_image, published")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
@@ -40,6 +45,11 @@ export function EditBlogsList() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEdit = (blog: BlogPost) => {
+    setSelectedBlog(blog);
+    setIsEditModalOpen(true);
   };
 
   const handleDelete = async (id: string) => {
@@ -117,6 +127,14 @@ export function EditBlogsList() {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => handleEdit(blog)}
+                  >
+                    <Edit className="h-4 w-4 mr-1" />
+                    Uredi
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => togglePublish(blog.id, blog.published)}
                   >
                     {blog.published ? "Sakrij" : "Objavi"}
@@ -133,6 +151,15 @@ export function EditBlogsList() {
             </Card>
           ))}
         </div>
+      )}
+      
+      {selectedBlog && (
+        <EditBlogModal
+          blog={selectedBlog}
+          open={isEditModalOpen}
+          onOpenChange={setIsEditModalOpen}
+          onSuccess={fetchBlogs}
+        />
       )}
     </div>
   );
