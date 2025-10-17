@@ -12,6 +12,7 @@ const AdminAuth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const navigate = useNavigate();
@@ -59,6 +60,34 @@ const AdminAuth = () => {
     }
   };
 
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin-dashboard`
+      }
+    });
+
+    if (error) {
+      toast({
+        title: "Greška pri registraciji",
+        description: error.message,
+        variant: "destructive",
+      });
+    } else {
+      toast({
+        title: "Uspješna registracija",
+        description: "Preusmjeravam na nadzornu ploču...",
+      });
+    }
+
+    setLoading(false);
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -74,6 +103,11 @@ const AdminAuth = () => {
         description: error.message,
         variant: "destructive",
       });
+    } else {
+      toast({
+        title: "Uspješna prijava",
+        description: "Preusmjeravam na nadzornu ploču...",
+      });
     }
 
     setLoading(false);
@@ -83,13 +117,15 @@ const AdminAuth = () => {
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Admin prijava</CardTitle>
+          <CardTitle>{isSignUp ? "Admin registracija" : "Admin prijava"}</CardTitle>
           <CardDescription>
-            Prijavite se s admin računom za pristup nadzornoj ploči
+            {isSignUp 
+              ? "Registrirajte se za pristup admin nadzornoj ploči" 
+              : "Prijavite se s admin računom za pristup nadzornoj ploči"}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSignIn} className="space-y-4">
+          <form onSubmit={isSignUp ? handleSignUp : handleSignIn} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -112,8 +148,21 @@ const AdminAuth = () => {
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Prijava..." : "Prijavi se"}
+              {loading 
+                ? (isSignUp ? "Registracija..." : "Prijava...") 
+                : (isSignUp ? "Registriraj se" : "Prijavi se")}
             </Button>
+            <div className="text-center text-sm">
+              <button
+                type="button"
+                onClick={() => setIsSignUp(!isSignUp)}
+                className="text-primary hover:underline"
+              >
+                {isSignUp 
+                  ? "Već imate račun? Prijavite se" 
+                  : "Nemate račun? Registrirajte se"}
+              </button>
+            </div>
           </form>
         </CardContent>
       </Card>
