@@ -94,11 +94,6 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
           </div>
         </section>
 
-        <footer className='group bg-primary py-8'>
-          <h1 className='text-[12vw] md:text-[16vw] leading-[100%] uppercase font-semibold text-center bg-gradient-to-r from-primary-foreground/40 to-primary-foreground/80 bg-clip-text text-transparent transition-all ease-linear'>
-            AktivNatura
-          </h1>
-        </footer>
       </main>
     </ReactLenis>
   );
