@@ -52,6 +52,9 @@ import {
 } from "@/components/ui/popover";
 import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { Upload } from "lucide-react";
 
 interface RichTextEditorProps {
   content: string;
@@ -69,6 +72,7 @@ export function RichTextEditor({
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
+  const [imageTab, setImageTab] = useState<string>("upload");
 
   const editor = useEditor({
     extensions: [
@@ -141,6 +145,13 @@ export function RichTextEditor({
     setImageUrl("");
     setIsImageDialogOpen(false);
   }, [editor, imageUrl]);
+
+  const handleImageUploaded = useCallback((url: string) => {
+    if (editor) {
+      editor.chain().focus().setImage({ src: url }).run();
+      setIsImageDialogOpen(false);
+    }
+  }, [editor]);
 
   const setFontSize = useCallback((size: string) => {
     if (editor) {
@@ -384,28 +395,50 @@ export function RichTextEditor({
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Add Image</DialogTitle>
+                <DialogTitle>Dodaj Sliku</DialogTitle>
                 <DialogDescription>
-                  Enter the URL of the image you want to display
+                  Uploadujte sliku ili unesite URL
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 pt-4">
-                <div className="space-y-2">
-                  <Label htmlFor="image-url">Image URL</Label>
-                  <Input
-                    id="image-url"
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="https://example.com/image.jpg"
-                    onKeyDown={(e) => e.key === "Enter" && addImage()}
-                  />
-                </div>
-                <div className="flex justify-end gap-2">
-                  <Button variant="outline" onClick={() => setIsImageDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={addImage}>Add Image</Button>
-                </div>
+              <div className="pt-4">
+                <Tabs value={imageTab} onValueChange={setImageTab}>
+                  <TabsList className="grid w-full grid-cols-2">
+                    <TabsTrigger value="upload">
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload
+                    </TabsTrigger>
+                    <TabsTrigger value="url">
+                      <ImageIcon className="h-4 w-4 mr-2" />
+                      URL
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="upload" className="space-y-4 mt-4">
+                    <ImageUpload
+                      onImageUploaded={handleImageUploaded}
+                      label="Odaberi sliku"
+                    />
+                  </TabsContent>
+                  
+                  <TabsContent value="url" className="space-y-4 mt-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="image-url">Image URL</Label>
+                      <Input
+                        id="image-url"
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        placeholder="https://example.com/image.jpg"
+                        onKeyDown={(e) => e.key === "Enter" && addImage()}
+                      />
+                    </div>
+                    <div className="flex justify-end gap-2">
+                      <Button variant="outline" onClick={() => setIsImageDialogOpen(false)}>
+                        Otkaži
+                      </Button>
+                      <Button onClick={addImage}>Dodaj</Button>
+                    </div>
+                  </TabsContent>
+                </Tabs>
               </div>
             </DialogContent>
           </Dialog>

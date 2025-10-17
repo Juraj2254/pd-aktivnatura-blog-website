@@ -89,12 +89,6 @@ export function CreateTripForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-[900px] mx-auto space-y-6 p-6 bg-background rounded-lg">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold">Kreiraj Trip</h2>
-        <p className="text-sm text-muted-foreground">
-          Unesite detalje putovanja i kreirajte sadržaj
-        </p>
-      </div>
 
       <div className="space-y-6">
         <div>

@@ -72,12 +72,6 @@ export function CreateBlogForm() {
 
   return (
     <form onSubmit={handleSubmit} className="max-w-[900px] mx-auto space-y-6 p-6 bg-background rounded-lg">
-      <div className="space-y-2">
-        <h2 className="text-2xl font-bold">Kreiraj Blog Post</h2>
-        <p className="text-sm text-muted-foreground">
-          Unesite naslov, odaberite kategoriju i kreirajte sadržaj
-        </p>
-      </div>
 
       <div className="space-y-6">
         <div>

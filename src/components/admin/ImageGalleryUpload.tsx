@@ -2,7 +2,9 @@ import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { X, Plus, Image as ImageIcon } from "lucide-react";
+import { X, Plus, Image as ImageIcon, Upload } from "lucide-react";
+import { ImageUpload } from "./ImageUpload";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ImageGalleryUploadProps {
   images: string[];
@@ -35,32 +37,58 @@ export function ImageGalleryUpload({
     onChange(newImages);
   };
 
+  const handleImageUploaded = (url: string) => {
+    onChange([...images, url]);
+  };
+
   return (
     <div className="space-y-4">
       <Label>{label}</Label>
       
-      {/* Add new image */}
-      <div className="flex gap-2">
-        <Input
-          type="url"
-          placeholder="https://..."
-          value={newImageUrl}
-          onChange={(e) => setNewImageUrl(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleAddImage();
-            }
-          }}
-        />
-        <Button
-          type="button"
-          onClick={handleAddImage}
-          disabled={!newImageUrl.trim()}
-        >
-          <Plus className="h-4 w-4" />
-        </Button>
-      </div>
+      {/* Add new image - Tabs for Upload or URL */}
+      <Tabs defaultValue="upload" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="upload">
+            <Upload className="h-4 w-4 mr-2" />
+            Upload
+          </TabsTrigger>
+          <TabsTrigger value="url">
+            <Plus className="h-4 w-4 mr-2" />
+            URL
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="upload" className="mt-4">
+          <ImageUpload
+            onImageUploaded={handleImageUploaded}
+            label=""
+          />
+        </TabsContent>
+        
+        <TabsContent value="url" className="mt-4">
+          <div className="flex gap-2">
+            <Input
+              type="url"
+              placeholder="https://..."
+              value={newImageUrl}
+              onChange={(e) => setNewImageUrl(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleAddImage();
+                }
+              }}
+            />
+            <Button
+              type="button"
+              onClick={handleAddImage}
+              disabled={!newImageUrl.trim()}
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
 
       {/* Image grid preview */}
       {images.length > 0 ? (
