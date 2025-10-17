@@ -204,11 +204,11 @@ export function RichTextEditor({
         {/* Font Size Dropdown */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input items-center">
           <Select onValueChange={setFontSize}>
-            <SelectTrigger className="w-[80px] sm:w-[100px] h-7 sm:h-8 text-xs">
+            <SelectTrigger className="w-[80px] sm:w-[100px] h-7 sm:h-8 text-xs bg-background">
               <Type className="h-3 w-3 mr-1" />
               <SelectValue placeholder="Size" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent side="bottom" align="start" className="bg-popover z-50">
               <SelectItem value="12px">12px</SelectItem>
               <SelectItem value="16px">16px</SelectItem>
               <SelectItem value="20px">20px</SelectItem>
@@ -417,10 +417,10 @@ export function RichTextEditor({
       </div>
 
       {/* Editor Content */}
-      <div className="min-h-[250px] sm:min-h-[400px] md:min-h-[500px] overflow-y-auto">
+      <div className="min-h-[250px] sm:min-h-[400px] md:min-h-[500px] overflow-y-auto bg-background">
         <EditorContent
           editor={editor}
-          className="prose prose-sm max-w-none p-3 sm:p-4 focus:outline-none text-sm sm:text-base"
+          className="prose prose-sm max-w-none p-3 sm:p-4 focus:outline-none text-sm sm:text-base text-foreground [&_.ProseMirror]:min-h-[250px] [&_.ProseMirror]:sm:min-h-[400px] [&_.ProseMirror]:md:min-h-[500px] [&_.ProseMirror]:text-foreground [&_.ProseMirror]:caret-foreground"
         />
       </div>
     </div>
