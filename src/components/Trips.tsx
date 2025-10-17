@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, MapPin } from "lucide-react";
+import { Calendar, MapPin, Grid3x3, Images } from "lucide-react";
 import trip1 from "@/assets/trip-1.jpg";
 import trip2 from "@/assets/trip-2.jpg";
 import trip3 from "@/assets/trip-3.jpg";
+import TripsGallery from "./TripsGallery";
 
 const trips = [
   {
@@ -33,6 +35,8 @@ const trips = [
 ];
 
 export const Trips = () => {
+  const [viewMode, setViewMode] = useState<'grid' | 'gallery'>('grid');
+
   return (
     <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
@@ -43,40 +47,64 @@ export const Trips = () => {
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Pridruži nam se na jednom od naših nadolazećih izleta
           </p>
+          
+          {/* View Toggle */}
+          <div className="flex justify-center gap-2 mt-6">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid3x3 className="h-4 w-4 mr-2" />
+              Grid Prikaz
+            </Button>
+            <Button
+              variant={viewMode === 'gallery' ? 'default' : 'outline'}
+              size="sm"
+              onClick={() => setViewMode('gallery')}
+            >
+              <Images className="h-4 w-4 mr-2" />
+              Galerija
+            </Button>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {trips.map((trip) => (
-            <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img 
-                  src={trip.image} 
-                  alt={trip.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl">{trip.title}</CardTitle>
-                <CardDescription>{trip.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="h-4 w-4" />
-                  <span>{trip.date}</span>
+        {viewMode === 'gallery' ? (
+          <TripsGallery />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {trips.map((trip) => (
+              <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img 
+                    src={trip.image} 
+                    alt={trip.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="h-4 w-4" />
-                  <span>{trip.location}</span>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button variant="outline" className="w-full">
-                  Saznaj više
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+                <CardHeader>
+                  <CardTitle className="text-xl">{trip.title}</CardTitle>
+                  <CardDescription>{trip.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-4 w-4" />
+                    <span>{trip.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <MapPin className="h-4 w-4" />
+                    <span>{trip.location}</span>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button variant="outline" className="w-full">
+                    Saznaj više
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
