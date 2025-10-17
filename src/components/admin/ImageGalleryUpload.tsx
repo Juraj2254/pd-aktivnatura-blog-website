@@ -1,10 +1,6 @@
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { X, Plus, Image as ImageIcon, Upload } from "lucide-react";
+import { X, Image as ImageIcon } from "lucide-react";
 import { ImageUpload } from "./ImageUpload";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ImageGalleryUploadProps {
   images: string[];
@@ -17,78 +13,21 @@ export function ImageGalleryUpload({
   onChange,
   label = "Galerija Slika",
 }: ImageGalleryUploadProps) {
-  const [newImageUrl, setNewImageUrl] = useState("");
-
-  const handleAddImage = () => {
-    if (newImageUrl.trim()) {
-      onChange([...images, newImageUrl.trim()]);
-      setNewImageUrl("");
-    }
+  const handleAddImage = (url: string) => {
+    onChange([...images, url]);
   };
 
   const handleRemoveImage = (index: number) => {
     onChange(images.filter((_, i) => i !== index));
   };
 
-  const handleReorder = (fromIndex: number, toIndex: number) => {
-    const newImages = [...images];
-    const [removed] = newImages.splice(fromIndex, 1);
-    newImages.splice(toIndex, 0, removed);
-    onChange(newImages);
-  };
-
-  const handleImageUploaded = (url: string) => {
-    onChange([...images, url]);
-  };
-
   return (
     <div className="space-y-4">
-      <Label>{label}</Label>
-      
-      {/* Add new image - Tabs for Upload or URL */}
-      <Tabs defaultValue="upload" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="upload">
-            <Upload className="h-4 w-4 mr-2" />
-            Upload
-          </TabsTrigger>
-          <TabsTrigger value="url">
-            <Plus className="h-4 w-4 mr-2" />
-            URL
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="upload" className="mt-4">
-          <ImageUpload
-            onImageUploaded={handleImageUploaded}
-            label=""
-          />
-        </TabsContent>
-        
-        <TabsContent value="url" className="mt-4">
-          <div className="flex gap-2">
-            <Input
-              type="url"
-              placeholder="https://..."
-              value={newImageUrl}
-              onChange={(e) => setNewImageUrl(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAddImage();
-                }
-              }}
-            />
-            <Button
-              type="button"
-              onClick={handleAddImage}
-              disabled={!newImageUrl.trim()}
-            >
-              <Plus className="h-4 w-4" />
-            </Button>
-          </div>
-        </TabsContent>
-      </Tabs>
+      <ImageUpload
+        label={label}
+        onImageUploaded={handleAddImage}
+        acceptMultiple={true}
+      />
 
       {/* Image grid preview */}
       {images.length > 0 ? (
@@ -126,7 +65,7 @@ export function ImageGalleryUpload({
       ) : (
         <div className="border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground">
           <ImageIcon className="h-12 w-12 mx-auto mb-2 opacity-50" />
-          <p className="text-sm">Nema slika. Dodajte URL slike iznad.</p>
+          <p className="text-sm">Nema slika. Uploaduj ili dodaj URL slike iznad.</p>
         </div>
       )}
       

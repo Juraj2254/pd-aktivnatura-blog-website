@@ -26,6 +26,7 @@ import {
   RemoveFormatting,
   Type,
   Palette,
+  Upload,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +39,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -52,9 +56,7 @@ import {
 } from "@/components/ui/popover";
 import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ImageUpload } from "@/components/admin/ImageUpload";
-import { Upload } from "lucide-react";
+import { ImageUpload } from "./ImageUpload";
 
 interface RichTextEditorProps {
   content: string;
@@ -72,6 +74,8 @@ export function RichTextEditor({
   const [isLinkDialogOpen, setIsLinkDialogOpen] = useState(false);
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const { toast } = useToast();
   const [imageTab, setImageTab] = useState<string>("upload");
 
   const editor = useEditor({
@@ -145,6 +149,47 @@ export function RichTextEditor({
     setImageUrl("");
     setIsImageDialogOpen(false);
   }, [editor, imageUrl]);
+
+  const handleImageFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !editor) return;
+
+    try {
+      setUploadingImage(true);
+      
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from('trip-blog-images')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('trip-blog-images')
+        .getPublicUrl(fileName);
+
+      editor.chain().focus().setImage({ src: publicUrl }).run();
+      setIsImageDialogOpen(false);
+      
+      toast({
+        title: "Uspjeh!",
+        description: "Slika je uploadovana.",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Greška",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleImageUploaded = useCallback((url: string) => {
     if (editor) {

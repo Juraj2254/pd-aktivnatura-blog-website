@@ -1,59 +1,63 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Upload, X, Loader2 } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Upload, Link as LinkIcon, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImageUploadProps {
   onImageUploaded: (url: string) => void;
   label?: string;
-  accept?: string;
+  acceptMultiple?: boolean;
 }
 
-export function ImageUpload({
-  onImageUploaded,
-  label = "Upload Image",
-  accept = "image/jpeg,image/jpg,image/png,image/webp,image/gif",
+export function ImageUpload({ 
+  onImageUploaded, 
+  label = "Slika",
+  acceptMultiple = false 
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const uploadImage = async (file: File) => {
+  const uploadFile = async (file: File) => {
     try {
       setUploading(true);
-
-      // Generate unique filename
-      const fileExt = file.name.split(".").pop();
+      
+      const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
 
-      // Upload to Supabase Storage
-      const { error: uploadError, data } = await supabase.storage
-        .from("trip-blog-images")
+      const { error: uploadError } = await supabase.storage
+        .from('trip-blog-images')
         .upload(filePath, file, {
-          cacheControl: "3600",
-          upsert: false,
+          cacheControl: '3600',
+          upsert: false
         });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("trip-blog-images").getPublicUrl(filePath);
+      const { data: { publicUrl } } = supabase.storage
+        .from('trip-blog-images')
+        .getPublicUrl(filePath);
 
       onImageUploaded(publicUrl);
-
+      
       toast({
         title: "Uspjeh!",
-        description: "Slika je uspješno uploadovana.",
+        description: "Slika je uploadovana.",
       });
+
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     } catch (error: any) {
       toast({
         title: "Greška",
-        description: error.message || "Greška prilikom uploada slike.",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
@@ -61,48 +65,99 @@ export function ImageUpload({
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    // Validate file size (5MB max)
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "Greška",
-        description: "Slika je prevelika. Maksimalna veličina je 5MB.",
-        variant: "destructive",
-      });
-      return;
+    if (acceptMultiple) {
+      for (let i = 0; i < files.length; i++) {
+        await uploadFile(files[i]);
+      }
+    } else {
+      await uploadFile(files[0]);
     }
+  };
 
-    // Validate file type
-    const allowedTypes = accept.split(",");
-    const fileType = file.type;
-    if (!allowedTypes.some((type) => fileType.match(type.replace("*", ".*")))) {
+  const handleUrlSubmit = () => {
+    if (urlInput.trim()) {
+      onImageUploaded(urlInput.trim());
+      setUrlInput("");
       toast({
-        title: "Greška",
-        description: "Nepodržan format slike.",
-        variant: "destructive",
+        title: "Uspjeh!",
+        description: "URL slike je dodat.",
       });
-      return;
     }
-
-    uploadImage(file);
   };
 
   return (
-    <div className="space-y-2">
-      <Label>{label}</Label>
-      <div className="flex gap-2">
-        <Input
-          type="file"
-          accept={accept}
-          onChange={handleFileChange}
-          disabled={uploading}
-          className="cursor-pointer"
-        />
-        {uploading && <Loader2 className="h-5 w-5 animate-spin" />}
-      </div>
+    <div className="space-y-3">
+      {label && <Label className="text-base">{label}</Label>}
+      
+      <Tabs defaultValue="upload" className="w-full">
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="upload">Upload</TabsTrigger>
+          <TabsTrigger value="url">URL</TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="upload" className="space-y-3 mt-3">
+          <div className="border-2 border-dashed rounded-lg p-6 text-center hover:border-primary/50 transition-colors">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              multiple={acceptMultiple}
+              onChange={handleFileChange}
+              className="hidden"
+              id={`file-upload-${Math.random()}`}
+              disabled={uploading}
+            />
+            <label 
+              htmlFor={`file-upload-${Math.random()}`}
+              className="cursor-pointer flex flex-col items-center gap-2"
+            >
+              {uploading ? (
+                <>
+                  <Loader2 className="h-10 w-10 text-primary animate-spin" />
+                  <p className="text-sm text-muted-foreground">Uploading...</p>
+                </>
+              ) : (
+                <>
+                  <Upload className="h-10 w-10 text-muted-foreground" />
+                  <p className="text-sm font-medium">Klikni za upload slike</p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG, WEBP, GIF (max 5MB)
+                  </p>
+                </>
+              )}
+            </label>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="url" className="space-y-3 mt-3">
+          <div className="flex gap-2">
+            <Input
+              type="url"
+              placeholder="https://..."
+              value={urlInput}
+              onChange={(e) => setUrlInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleUrlSubmit();
+                }
+              }}
+            />
+            <Button
+              type="button"
+              onClick={handleUrlSubmit}
+              disabled={!urlInput.trim()}
+              size="icon"
+            >
+              <LinkIcon className="h-4 w-4" />
+            </Button>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
