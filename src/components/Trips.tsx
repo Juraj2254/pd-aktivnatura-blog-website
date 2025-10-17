@@ -51,7 +51,7 @@ export const Trips = () => {
           {/* View Toggle */}
           <div className="flex justify-center gap-2 mt-6">
             <Button
-              variant={viewMode === 'grid' ? 'default' : 'outline'}
+              variant={viewMode === 'grid' ? 'outline' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('grid')}
             >
@@ -59,7 +59,7 @@ export const Trips = () => {
               Grid Prikaz
             </Button>
             <Button
-              variant={viewMode === 'gallery' ? 'default' : 'outline'}
+              variant={viewMode === 'gallery' ? 'outline' : 'ghost'}
               size="sm"
               onClick={() => setViewMode('gallery')}
             >
