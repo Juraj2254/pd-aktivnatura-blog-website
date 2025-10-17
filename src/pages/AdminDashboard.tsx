@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
 import type { User, Session } from "@supabase/supabase-js";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { CreateBlogForm } from "@/components/admin/CreateBlogForm";
+import { CreateTripForm } from "@/components/admin/CreateTripForm";
+import { EditBlogsList } from "@/components/admin/EditBlogsList";
+import { EditTripsList } from "@/components/admin/EditTripsList";
 
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentView, setCurrentView] = useState("create-blog");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,27 +82,55 @@ const AdminDashboard = () => {
     return null;
   }
 
-  return (
-    <div className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold">Admin Dashboard</h1>
-          <Button onClick={handleSignOut} variant="outline">
-            Odjavi se
-          </Button>
-        </div>
-        
-        <div className="grid gap-6">
-          <div className="bg-card p-6 rounded-lg border">
-            <h2 className="text-2xl font-semibold mb-4">Dobrodošli u admin panel</h2>
+  const renderContent = () => {
+    switch (currentView) {
+      case "create-blog":
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Kreiraj Blog Post</h1>
+            <CreateBlogForm />
+          </div>
+        );
+      case "edit-blogs":
+        return <EditBlogsList />;
+      case "create-trip":
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-6">Kreiraj Izlet</h1>
+            <CreateTripForm />
+          </div>
+        );
+      case "edit-trips":
+        return <EditTripsList />;
+      default:
+        return (
+          <div>
+            <h1 className="text-3xl font-bold mb-4">Dobrodošli u Admin Panel</h1>
             <p className="text-muted-foreground">
-              Ovdje ćete moći upravljati blogovima, izletima i kategorijama.
-              Sučelje će biti dodano uskoro.
+              Odaberite opciju iz sidebar-a za upravljanje sadržajem.
             </p>
           </div>
+        );
+    }
+  };
+
+  return (
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
+        
+        <div className="flex-1 flex flex-col">
+          <header className="h-14 flex items-center border-b border-border px-6 bg-background">
+            <SidebarTrigger />
+            <h2 className="ml-4 text-lg font-semibold">Admin Dashboard</h2>
+          </header>
+          
+          <main className="flex-1 p-8 bg-background overflow-auto">
+            {renderContent()}
+          </main>
         </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
