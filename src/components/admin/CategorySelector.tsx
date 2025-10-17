@@ -136,7 +136,7 @@ export function CategorySelector({
             <SelectTrigger>
               <SelectValue placeholder="Odaberi kategoriju" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-popover z-50">
               {categories.map((category) => (
                 <SelectItem key={category.id} value={category.id}>
                   {category.name}
