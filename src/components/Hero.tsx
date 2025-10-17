@@ -20,7 +20,7 @@ export const Hero = () => {
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
           Pridruži se AktivNatura klubu i istraži najljepše planine Hrvatske
         </p>
-        <Button variant="hero" size="lg" className="text-lg bg-[#EF3B42] hover:bg-[#EF3B42]/90">
+        <Button variant="hero" size="lg" className="text-lg bg-[#F70000] hover:bg-[#F70000]/90 text-white">
           Pogledaj kalendar izleta
         </Button>
       </div>
