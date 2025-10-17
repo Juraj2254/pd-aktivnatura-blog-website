@@ -2,33 +2,49 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
+import { CategorySelector } from "./CategorySelector";
+import { Loader2 } from "lucide-react";
 
 export function CreateBlogForm() {
   const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [excerpt, setExcerpt] = useState("");
+  const [categoryId, setCategoryId] = useState("");
   const [content, setContent] = useState("");
-  const [featuredImage, setFeaturedImage] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!title.trim() || !categoryId || !content.trim()) {
+      toast({
+        title: "Greška",
+        description: "Molimo popunite sva polja",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      const slug = generateSlug(title);
       
       const { error } = await supabase.from("blog_posts").insert({
         title,
         slug,
-        excerpt,
         content,
-        featured_image: featuredImage || null,
+        category_id: categoryId,
         author_id: user?.id,
         published: false,
       });
@@ -40,12 +56,9 @@ export function CreateBlogForm() {
         description: "Blog post je kreiran.",
       });
 
-      // Reset form
       setTitle("");
-      setSlug("");
-      setExcerpt("");
+      setCategoryId("");
       setContent("");
-      setFeaturedImage("");
     } catch (error: any) {
       toast({
         title: "Greška",
@@ -58,60 +71,58 @@ export function CreateBlogForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 max-w-4xl">
-      <div>
-        <Label htmlFor="title">Naslov</Label>
-        <Input
-          id="title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+    <form onSubmit={handleSubmit} className="max-w-[900px] mx-auto space-y-6 p-6 bg-background rounded-lg">
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold">Kreiraj Blog Post</h2>
+        <p className="text-sm text-muted-foreground">
+          Unesite naslov, odaberite kategoriju i kreirajte sadržaj
+        </p>
       </div>
 
-      <div>
-        <Label htmlFor="slug">Slug (URL)</Label>
-        <Input
-          id="slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          required
-          placeholder="npr. moj-prvi-blog"
+      <div className="space-y-6">
+        <div>
+          <Label htmlFor="title" className="text-base">Naslov</Label>
+          <Input
+            id="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className="text-lg h-12 mt-2"
+            placeholder="Unesite naslov blog posta..."
+          />
+        </div>
+
+        <CategorySelector
+          value={categoryId}
+          onChange={setCategoryId}
+          type="blog"
+          label="Kategorija"
         />
+
+        <div>
+          <Label className="text-base mb-2 block">Sadržaj</Label>
+          <RichTextEditor
+            content={content}
+            onChange={setContent}
+            placeholder="Napišite sadržaj blog posta ovdje..."
+          />
+        </div>
       </div>
 
-      <div>
-        <Label htmlFor="excerpt">Sažetak</Label>
-        <Textarea
-          id="excerpt"
-          value={excerpt}
-          onChange={(e) => setExcerpt(e.target.value)}
-          rows={3}
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="content">Sadržaj</Label>
-        <RichTextEditor
-          content={content}
-          onChange={setContent}
-          placeholder="Napiši sadržaj bloga ovdje..."
-        />
-      </div>
-
-      <div>
-        <Label htmlFor="featuredImage">Featured Image URL</Label>
-        <Input
-          id="featuredImage"
-          type="url"
-          value={featuredImage}
-          onChange={(e) => setFeaturedImage(e.target.value)}
-          placeholder="https://..."
-        />
-      </div>
-
-      <Button type="submit" disabled={loading}>
-        {loading ? "Kreiranje..." : "Kreiraj Blog Post"}
+      <Button 
+        type="submit" 
+        disabled={loading}
+        size="lg"
+        className="w-full h-12"
+      >
+        {loading ? (
+          <>
+            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+            Kreiranje...
+          </>
+        ) : (
+          "Kreiraj Blog Post"
+        )}
       </Button>
     </form>
   );

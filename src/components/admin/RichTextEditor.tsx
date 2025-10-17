@@ -137,9 +137,9 @@ export function RichTextEditor({
   );
 
   return (
-    <div className="border border-input rounded-md bg-background">
+    <div className="w-[800px] border border-input rounded-md bg-background">
       {/* Toolbar */}
-      <div className="border-b border-input p-2 flex flex-wrap gap-1">
+      <div className="border-b border-input p-2 flex flex-wrap gap-1 sticky top-0 z-10 bg-background">
         {/* Text Formatting */}
         <div className="flex gap-1 pr-2 border-r border-input">
           <MenuButton
@@ -341,10 +341,12 @@ export function RichTextEditor({
       </div>
 
       {/* Editor Content */}
-      <EditorContent
-        editor={editor}
-        className="prose prose-sm max-w-none p-4 min-h-[300px] focus:outline-none"
-      />
+      <div className="min-h-[768px] overflow-y-auto">
+        <EditorContent
+          editor={editor}
+          className="prose prose-sm max-w-none p-4 focus:outline-none"
+        />
+      </div>
     </div>
   );
 }

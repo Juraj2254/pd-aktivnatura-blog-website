@@ -2,10 +2,16 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
+import { CategorySelector } from "./CategorySelector";
+import { ImageGalleryUpload } from "./ImageGalleryUpload";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -16,9 +22,10 @@ import {
 interface Trip {
   id: string;
   title: string;
+  subtitle: string | null;
   slug: string;
   description: string | null;
-  content: string | null;
+  content: string;
   location: string | null;
   duration: string | null;
   difficulty: string | null;
@@ -26,6 +33,8 @@ interface Trip {
   max_participants: number | null;
   featured_image: string | null;
   published: boolean;
+  category_id: string | null;
+  date: string | null;
 }
 
 interface EditTripModalProps {
@@ -42,51 +51,75 @@ export function EditTripModal({
   onSuccess,
 }: EditTripModalProps) {
   const [title, setTitle] = useState(trip.title);
-  const [slug, setSlug] = useState(trip.slug);
-  const [description, setDescription] = useState(trip.description || "");
-  const [content, setContent] = useState(trip.content || "");
-  const [location, setLocation] = useState(trip.location || "");
-  const [duration, setDuration] = useState(trip.duration || "");
-  const [difficulty, setDifficulty] = useState(trip.difficulty || "");
-  const [price, setPrice] = useState(trip.price?.toString() || "");
-  const [maxParticipants, setMaxParticipants] = useState(
-    trip.max_participants?.toString() || ""
+  const [subtitle, setSubtitle] = useState(trip.subtitle || "");
+  const [categoryId, setCategoryId] = useState(trip.category_id || "");
+  const [images, setImages] = useState<string[]>([]);
+  const [content, setContent] = useState(trip.content);
+  const [date, setDate] = useState<Date | undefined>(
+    trip.date ? new Date(trip.date) : undefined
   );
-  const [featuredImage, setFeaturedImage] = useState(trip.featured_image || "");
+  const [attendees, setAttendees] = useState(
+    trip.max_participants ? trip.max_participants.toString() : ""
+  );
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     setTitle(trip.title);
-    setSlug(trip.slug);
-    setDescription(trip.description || "");
-    setContent(trip.content || "");
-    setLocation(trip.location || "");
-    setDuration(trip.duration || "");
-    setDifficulty(trip.difficulty || "");
-    setPrice(trip.price?.toString() || "");
-    setMaxParticipants(trip.max_participants?.toString() || "");
-    setFeaturedImage(trip.featured_image || "");
+    setSubtitle(trip.subtitle || "");
+    setCategoryId(trip.category_id || "");
+    setContent(trip.content);
+    setDate(trip.date ? new Date(trip.date) : undefined);
+    setAttendees(trip.max_participants ? trip.max_participants.toString() : "");
+    
+    // Parse images from featured_image field (JSON array or single URL)
+    try {
+      if (trip.featured_image) {
+        const parsed = JSON.parse(trip.featured_image);
+        setImages(Array.isArray(parsed) ? parsed : [trip.featured_image]);
+      } else {
+        setImages([]);
+      }
+    } catch {
+      setImages(trip.featured_image ? [trip.featured_image] : []);
+    }
   }, [trip]);
+
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/[^\w-]+/g, "");
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!title.trim() || !categoryId || !content.trim()) {
+      toast({
+        title: "Greška",
+        description: "Molimo popunite sva obavezna polja",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
+      const slug = generateSlug(title);
+      
       const { error } = await supabase
         .from("trips")
         .update({
           title,
+          subtitle: subtitle || null,
           slug,
-          description,
           content,
-          location,
-          duration,
-          difficulty,
-          price: price ? parseFloat(price) : null,
-          max_participants: maxParticipants ? parseInt(maxParticipants) : null,
-          featured_image: featuredImage || null,
+          category_id: categoryId,
+          featured_image: images.length > 0 ? JSON.stringify(images) : null,
+          date: date ? date.toISOString() : null,
+          max_participants: attendees ? parseInt(attendees) : null,
           updated_at: new Date().toISOString(),
         })
         .eq("id", trip.id);
@@ -95,7 +128,7 @@ export function EditTripModal({
 
       toast({
         title: "Uspjeh!",
-        description: "Izlet je ažuriran.",
+        description: "Trip je ažuriran.",
       });
 
       onSuccess();
@@ -113,124 +146,117 @@ export function EditTripModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-[95vw] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Uredi Izlet</DialogTitle>
+          <DialogTitle className="text-2xl">Uredi Trip</DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label htmlFor="edit-title">Naslov</Label>
+            <Label htmlFor="edit-title" className="text-base">Naslov</Label>
             <Input
               id="edit-title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
+              className="text-lg h-12 mt-2"
             />
           </div>
 
           <div>
-            <Label htmlFor="edit-slug">Slug (URL)</Label>
+            <Label htmlFor="edit-subtitle" className="text-base">Podnaslov</Label>
             <Input
-              id="edit-slug"
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              required
+              id="edit-subtitle"
+              value={subtitle}
+              onChange={(e) => setSubtitle(e.target.value)}
+              className="text-base h-11 mt-2"
             />
           </div>
 
-          <div>
-            <Label htmlFor="edit-description">Opis</Label>
-            <Textarea
-              id="edit-description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={3}
-            />
-          </div>
+          <CategorySelector
+            value={categoryId}
+            onChange={setCategoryId}
+            type="trip"
+            label="Kategorija"
+          />
+
+          <ImageGalleryUpload
+            images={images}
+            onChange={setImages}
+            label="Galerija Slika"
+          />
 
           <div>
-            <Label htmlFor="edit-content">Sadržaj</Label>
+            <Label className="text-base mb-2 block">Sadržaj</Label>
             <RichTextEditor
               content={content}
               onChange={setContent}
-              placeholder="Napiši detaljne informacije o izletu ovdje..."
+              placeholder="Napišite opis tripa ovdje..."
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <Label htmlFor="edit-location">Lokacija</Label>
-              <Input
-                id="edit-location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-              />
+              <Label className="text-base">Datum</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal h-11 mt-2",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : "Odaberi datum"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                    className="pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div>
-              <Label htmlFor="edit-duration">Trajanje</Label>
+              <Label htmlFor="edit-attendees" className="text-base">Broj Sudionika</Label>
               <Input
-                id="edit-duration"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="edit-difficulty">Težina</Label>
-              <Input
-                id="edit-difficulty"
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="edit-price">Cijena (€)</Label>
-              <Input
-                id="edit-price"
+                id="edit-attendees"
                 type="number"
-                step="0.01"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
+                min="0"
+                value={attendees}
+                onChange={(e) => setAttendees(e.target.value)}
+                className="h-11 mt-2"
               />
             </div>
-          </div>
-
-          <div>
-            <Label htmlFor="edit-maxParticipants">
-              Maksimalan broj sudionika
-            </Label>
-            <Input
-              id="edit-maxParticipants"
-              type="number"
-              value={maxParticipants}
-              onChange={(e) => setMaxParticipants(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="edit-featuredImage">Featured Image URL</Label>
-            <Input
-              id="edit-featuredImage"
-              type="url"
-              value={featuredImage}
-              onChange={(e) => setFeaturedImage(e.target.value)}
-              placeholder="https://..."
-            />
           </div>
 
           <div className="flex gap-3">
-            <Button type="submit" disabled={loading}>
-              {loading ? "Spremanje..." : "Spremi Promjene"}
+            <Button 
+              type="submit" 
+              disabled={loading}
+              size="lg"
+              className="flex-1"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  Spremanje...
+                </>
+              ) : (
+                "Spremi Promjene"
+              )}
             </Button>
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
+              size="lg"
             >
               Odustani
             </Button>

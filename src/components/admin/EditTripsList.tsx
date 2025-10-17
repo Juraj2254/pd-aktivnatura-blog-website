@@ -9,9 +9,10 @@ import { EditTripModal } from "./EditTripModal";
 interface Trip {
   id: string;
   title: string;
+  subtitle: string | null;
   slug: string;
   description: string | null;
-  content: string | null;
+  content: string;
   location: string | null;
   duration: string | null;
   difficulty: string | null;
@@ -19,6 +20,8 @@ interface Trip {
   max_participants: number | null;
   featured_image: string | null;
   published: boolean;
+  category_id: string | null;
+  date: string | null;
 }
 
 export function EditTripsList() {

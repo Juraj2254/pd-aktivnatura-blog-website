@@ -114,6 +114,7 @@ export type Database = {
           price: number | null
           published: boolean
           slug: string
+          subtitle: string | null
           title: string
           updated_at: string
         }
@@ -133,6 +134,7 @@ export type Database = {
           price?: number | null
           published?: boolean
           slug: string
+          subtitle?: string | null
           title: string
           updated_at?: string
         }
@@ -152,6 +154,7 @@ export type Database = {
           price?: number | null
           published?: boolean
           slug?: string
+          subtitle?: string | null
           title?: string
           updated_at?: string
         }

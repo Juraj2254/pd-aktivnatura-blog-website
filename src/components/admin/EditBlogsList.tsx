@@ -14,6 +14,7 @@ interface BlogPost {
   content: string;
   featured_image: string | null;
   published: boolean;
+  category_id: string | null;
 }
 
 export function EditBlogsList() {
@@ -31,7 +32,7 @@ export function EditBlogsList() {
     try {
       const { data, error } = await supabase
         .from("blog_posts")
-        .select("id, title, slug, excerpt, content, featured_image, published")
+        .select("id, title, slug, excerpt, content, featured_image, published, category_id")
         .order("created_at", { ascending: false });
 
       if (error) throw error;
