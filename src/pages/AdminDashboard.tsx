@@ -10,7 +10,6 @@ import { CreateTripForm } from "@/components/admin/CreateTripForm";
 import { EditBlogsList } from "@/components/admin/EditBlogsList";
 import { EditTripsList } from "@/components/admin/EditTripsList";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -19,47 +18,45 @@ const AdminDashboard = () => {
   const [currentView, setCurrentView] = useState("create-blog");
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-
   useEffect(() => {
     // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (!session) {
-          navigate("/admin-auth");
-        } else {
-          setTimeout(() => {
-            checkAdminRole(session.user.id);
-          }, 0);
-        }
+    const {
+      data: {
+        subscription
       }
-    );
-
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+      if (!session) {
+        navigate("/admin-auth");
+      } else {
+        setTimeout(() => {
+          checkAdminRole(session.user.id);
+        }, 0);
+      }
+    });
+
+    // Check for existing session
+    supabase.auth.getSession().then(({
+      data: {
+        session
+      }
+    }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
       if (!session) {
         navigate("/admin-auth");
       } else {
         checkAdminRole(session.user.id);
       }
     });
-
     return () => subscription.unsubscribe();
   }, [navigate]);
-
   const checkAdminRole = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-
+    const {
+      data,
+      error
+    } = await supabase.from("user_roles").select("role").eq("user_id", userId).eq("role", "admin").maybeSingle();
     if (!data) {
       navigate("/admin-auth");
     } else {
@@ -67,61 +64,48 @@ const AdminDashboard = () => {
     }
     setLoading(false);
   };
-
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/admin-auth");
   };
-
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
+    return <div className="min-h-screen flex items-center justify-center">
         <p>Učitavanje...</p>
-      </div>
-    );
+      </div>;
   }
-
   if (!isAdmin) {
     return null;
   }
-
   const renderContent = () => {
     switch (currentView) {
       case "create-blog":
-        return (
-          <div className="max-w-4xl">
+        return <div className="max-w-4xl">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Blog Post</h1>
             <CreateBlogForm />
-          </div>
-        );
+          </div>;
       case "edit-blogs":
         return <EditBlogsList />;
       case "create-trip":
-        return (
-          <div className="max-w-4xl">
+        return <div className="max-w-4xl">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Izlet</h1>
             <CreateTripForm />
-          </div>
-        );
+          </div>;
       case "edit-trips":
         return <EditTripsList />;
       default:
-        return (
-          <div className="max-w-4xl">
+        return <div className="max-w-4xl">
             <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Dobrodošli u Admin Panel</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
               Odaberite opciju iz sidebar-a za upravljanje sadržajem.
             </p>
-          </div>
-        );
+          </div>;
     }
   };
 
   // Mobile layout
   if (isMobile) {
-    return (
-      <div className="min-h-screen flex flex-col w-full pb-16">
-        <header className="h-12 flex items-center border-b border-border px-3 bg-background sticky top-0 z-40">
+    return <div className="min-h-screen flex flex-col w-full pb-16">
+        <header className="h-12 flex items-center border-b border-border px-3 sticky top-0 z-40 bg-slate-50">
           <h2 className="text-base font-semibold truncate">Admin Dashboard</h2>
         </header>
         
@@ -130,13 +114,11 @@ const AdminDashboard = () => {
         </main>
 
         <MobileBottomNav currentView={currentView} onViewChange={setCurrentView} />
-      </div>
-    );
+      </div>;
   }
 
   // Desktop layout
-  return (
-    <SidebarProvider>
+  return <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
         
@@ -151,8 +133,6 @@ const AdminDashboard = () => {
           </main>
         </div>
       </div>
-    </SidebarProvider>
-  );
+    </SidebarProvider>;
 };
-
 export default AdminDashboard;
