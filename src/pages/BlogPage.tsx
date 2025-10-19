@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import blogHeroImage from "@/assets/blog-hero.jpg";
 
 interface BlogPost {
   id: string;
@@ -68,11 +69,21 @@ const BlogPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       
-      <main className="flex-1 pt-20 pb-16">
-        <div className="container mx-auto px-4">
+      <main className="flex-1">
+        {/* Hero Image Section */}
+        <div className="relative h-[40vh] md:h-[50vh] lg:h-[60vh] w-full overflow-hidden">
+          <img 
+            src={blogHeroImage} 
+            alt="Blog hero - hiking landscape" 
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/40 to-background"></div>
+        </div>
+
+        <div className="container mx-auto px-4 -mt-20 relative z-10">
           {/* Header */}
           <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground drop-shadow-lg">
               Blog
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
