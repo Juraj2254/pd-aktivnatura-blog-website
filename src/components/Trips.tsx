@@ -98,7 +98,7 @@ export const Trips = () => {
         ) : trips.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-lg text-muted-foreground mb-4">
-              Trenutno nema dostupnih izleta. Provjerite uskoro!
+              Trenutno nema objavljenih izleta. Provjerite uskoro!
             </p>
             <Link to="/izleti">
               <Button variant="outline">
