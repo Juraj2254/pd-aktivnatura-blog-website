@@ -117,7 +117,7 @@ export function EditTripModal({
           slug,
           content,
           category_id: categoryId,
-          featured_image: images.length > 0 ? JSON.stringify(images) : null,
+          featured_image: images.length > 0 ? images[0] : null,
           date: date ? date.toISOString() : null,
           max_participants: attendees ? parseInt(attendees) : null,
           updated_at: new Date().toISOString(),
