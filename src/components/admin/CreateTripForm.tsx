@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
 import { CategorySelector } from "./CategorySelector";
@@ -21,6 +22,7 @@ export function CreateTripForm() {
   const [content, setContent] = useState("");
   const [date, setDate] = useState<Date>();
   const [attendees, setAttendees] = useState("");
+  const [published, setPublished] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -59,7 +61,7 @@ export function CreateTripForm() {
         date: date ? date.toISOString() : null,
         max_participants: attendees ? parseInt(attendees) : null,
         created_by: user?.id,
-        published: false,
+        published: published,
       });
 
       if (error) throw error;
@@ -76,6 +78,7 @@ export function CreateTripForm() {
       setContent("");
       setDate(undefined);
       setAttendees("");
+      setPublished(false);
     } catch (error: any) {
       toast({
         title: "Greška",
@@ -176,6 +179,20 @@ export function CreateTripForm() {
               placeholder="Unesite broj sudionika..."
             />
           </div>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Checkbox
+            id="published"
+            checked={published}
+            onCheckedChange={(checked) => setPublished(checked as boolean)}
+          />
+          <Label
+            htmlFor="published"
+            className="text-base font-normal cursor-pointer"
+          >
+            Objavi odmah
+          </Label>
         </div>
       </div>
 
