@@ -77,13 +77,13 @@ const BlogPage = () => {
             alt="Blog hero - hiking landscape" 
             className="w-full h-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/40 to-background"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background/90"></div>
         </div>
 
-        <div className="container mx-auto px-4 -mt-20 relative z-10">
+        <div className="container mx-auto px-4 pt-12 md:pt-16">
           {/* Header */}
           <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground drop-shadow-lg">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4 text-foreground">
               Blog
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground">
