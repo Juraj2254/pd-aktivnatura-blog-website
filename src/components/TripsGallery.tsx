@@ -1,6 +1,16 @@
 import { ReactLenis } from 'lenis/react';
 import { forwardRef } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import gallery1 from '@/assets/gallery-1.jpg';
+import gallery2 from '@/assets/gallery-2.jpg';
+import gallery3 from '@/assets/gallery-3.jpg';
+import gallery4 from '@/assets/gallery-4.jpg';
+import gallery5 from '@/assets/gallery-5.jpg';
+import gallery6 from '@/assets/gallery-6.jpg';
+import gallery7 from '@/assets/gallery-7.jpg';
+import gallery8 from '@/assets/gallery-8.jpg';
+import gallery9 from '@/assets/gallery-9.jpg';
+import gallery10 from '@/assets/gallery-10.jpg';
 
 interface TripsGalleryProps {
   images?: {
@@ -12,26 +22,26 @@ interface TripsGalleryProps {
 
 const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref) => {
   const isMobile = useIsMobile();
-  // Default hiking images from Unsplash
+  // Gallery images from hiking trips
   const defaultImages = {
     left: [
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1551632811-561732d1e306?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1540979388789-6cee28a1cdc9?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?w=500&auto=format&fit=crop',
+      gallery1,
+      gallery2,
+      gallery3,
+      gallery4,
+      gallery5,
     ],
     center: [
-      'https://images.unsplash.com/photo-1519904981063-b0cf448d479e?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1476610182048-b716b8518aae?w=500&auto=format&fit=crop',
+      gallery6,
+      gallery8,
+      gallery9,
     ],
     right: [
-      'https://images.unsplash.com/photo-1551632811-561732d1e306?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=500&auto=format&fit=crop',
-      'https://images.unsplash.com/photo-1434725039720-aaad6dd32dfe?w=500&auto=format&fit=crop',
+      gallery7,
+      gallery10,
+      gallery3,
+      gallery4,
+      gallery1,
     ],
   };
 
