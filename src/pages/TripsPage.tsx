@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { Calendar, Users, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import tripsHero from "@/assets/trips-hero.jpg";
 
 interface Trip {
   id: string;
@@ -86,18 +87,10 @@ const TripsPage = () => {
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070')",
+            backgroundImage: `url(${tripsHero})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background/90" />
-        </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-primary-foreground drop-shadow-lg animate-fade-in">
-            Hiking & Trekking
-          </h1>
-          <p className="text-lg md:text-xl text-primary-foreground/90 max-w-2xl mx-auto drop-shadow animate-fade-in">
-            Pridružite se našim avanturama kroz najljepše dijelove Hrvatske
-          </p>
         </div>
       </section>
 
