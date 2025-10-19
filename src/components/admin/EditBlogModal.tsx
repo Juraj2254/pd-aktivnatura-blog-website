@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
 import { CategorySelector } from "./CategorySelector";
+import { ImageUpload } from "./ImageUpload";
 import {
   Dialog,
   DialogContent,
@@ -41,6 +42,7 @@ export function EditBlogModal({
   const [title, setTitle] = useState(blog.title);
   const [categoryId, setCategoryId] = useState(blog.category_id || "");
   const [content, setContent] = useState(blog.content);
+  const [featuredImage, setFeaturedImage] = useState(blog.featured_image || "");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -48,6 +50,7 @@ export function EditBlogModal({
     setTitle(blog.title);
     setCategoryId(blog.category_id || "");
     setContent(blog.content);
+    setFeaturedImage(blog.featured_image || "");
   }, [blog]);
 
   const generateSlug = (text: string) => {
@@ -80,6 +83,7 @@ export function EditBlogModal({
           title,
           slug,
           content,
+          featured_image: featuredImage || null,
           category_id: categoryId,
           updated_at: new Date().toISOString(),
         })
@@ -129,6 +133,13 @@ export function EditBlogModal({
             onChange={setCategoryId}
             type="blog"
             label="Kategorija"
+          />
+
+          <ImageUpload
+            value={featuredImage}
+            onChange={setFeaturedImage}
+            bucket="trip-blog-images"
+            label="Naslovna slika"
           />
 
           <div>

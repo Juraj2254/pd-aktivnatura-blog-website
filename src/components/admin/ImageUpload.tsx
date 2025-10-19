@@ -4,25 +4,40 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Upload, Link as LinkIcon, Loader2 } from "lucide-react";
+import { Upload, Link as LinkIcon, Loader2, X, Image as ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ImageUploadProps {
-  onImageUploaded: (url: string) => void;
+  value?: string;
+  onChange?: (url: string) => void;
+  onImageUploaded?: (url: string) => void;
   label?: string;
   acceptMultiple?: boolean;
+  bucket?: string;
 }
 
 export function ImageUpload({ 
+  value,
+  onChange,
   onImageUploaded, 
   label = "Slika",
-  acceptMultiple = false 
+  acceptMultiple = false,
+  bucket = "trip-blog-images"
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [urlInput, setUrlInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const uploadInputId = useId();
+
+  const handleImageUpdate = (url: string) => {
+    if (onChange) {
+      onChange(url);
+    }
+    if (onImageUploaded) {
+      onImageUploaded(url);
+    }
+  };
 
   const uploadFile = async (file: File) => {
     try {
@@ -33,7 +48,7 @@ export function ImageUpload({
       const filePath = `${fileName}`;
 
       const { error: uploadError } = await supabase.storage
-        .from('trip-blog-images')
+        .from(bucket)
         .upload(filePath, file, {
           cacheControl: '3600',
           upsert: false
@@ -42,10 +57,10 @@ export function ImageUpload({
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('trip-blog-images')
+        .from(bucket)
         .getPublicUrl(filePath);
 
-      onImageUploaded(publicUrl);
+      handleImageUpdate(publicUrl);
       
       toast({
         title: "Uspjeh!",
@@ -81,7 +96,7 @@ export function ImageUpload({
 
   const handleUrlSubmit = () => {
     if (urlInput.trim()) {
-      onImageUploaded(urlInput.trim());
+      handleImageUpdate(urlInput.trim());
       setUrlInput("");
       toast({
         title: "Uspjeh!",
@@ -90,9 +105,37 @@ export function ImageUpload({
     }
   };
 
+  const handleRemoveImage = () => {
+    handleImageUpdate("");
+    toast({
+      title: "Uspjeh!",
+      description: "Slika je uklonjena.",
+    });
+  };
+
   return (
     <div className="space-y-3">
       {label && <Label className="text-base">{label}</Label>}
+      
+      {/* Show current image if exists */}
+      {value && (
+        <div className="relative w-full aspect-video rounded-lg overflow-hidden border bg-muted">
+          <img 
+            src={value} 
+            alt="Preview" 
+            className="w-full h-full object-cover"
+          />
+          <Button
+            type="button"
+            variant="destructive"
+            size="icon"
+            className="absolute top-2 right-2"
+            onClick={handleRemoveImage}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
       
       <Tabs defaultValue="upload" className="w-full">
         <TabsList className="grid w-full grid-cols-2">
@@ -124,7 +167,9 @@ export function ImageUpload({
               ) : (
                 <>
                   <Upload className="h-10 w-10 text-muted-foreground" />
-                  <p className="text-sm font-medium">Klikni za upload slike</p>
+                  <p className="text-sm font-medium">
+                    {value ? "Promijeni sliku" : "Klikni za upload slike"}
+                  </p>
                   <p className="text-xs text-muted-foreground">
                     PNG, JPG, WEBP, GIF (max 5MB)
                   </p>

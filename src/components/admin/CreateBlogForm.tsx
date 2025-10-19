@@ -6,12 +6,14 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { RichTextEditor } from "./RichTextEditor";
 import { CategorySelector } from "./CategorySelector";
+import { ImageUpload } from "./ImageUpload";
 import { Loader2 } from "lucide-react";
 
 export function CreateBlogForm() {
   const [title, setTitle] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [content, setContent] = useState("");
+  const [featuredImage, setFeaturedImage] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -44,6 +46,7 @@ export function CreateBlogForm() {
         title,
         slug,
         content,
+        featured_image: featuredImage || null,
         category_id: categoryId,
         author_id: user?.id,
         published: false,
@@ -59,6 +62,7 @@ export function CreateBlogForm() {
       setTitle("");
       setCategoryId("");
       setContent("");
+      setFeaturedImage("");
     } catch (error: any) {
       toast({
         title: "Greška",
@@ -91,6 +95,13 @@ export function CreateBlogForm() {
           onChange={setCategoryId}
           type="blog"
           label="Kategorija"
+        />
+
+        <ImageUpload
+          value={featuredImage}
+          onChange={setFeaturedImage}
+          bucket="trip-blog-images"
+          label="Naslovna slika"
         />
 
         <div>
