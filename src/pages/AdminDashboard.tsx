@@ -4,10 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { MobileBottomNav } from "@/components/admin/MobileBottomNav";
 import { CreateBlogForm } from "@/components/admin/CreateBlogForm";
 import { CreateTripForm } from "@/components/admin/CreateTripForm";
 import { EditBlogsList } from "@/components/admin/EditBlogsList";
 import { EditTripsList } from "@/components/admin/EditTripsList";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -16,6 +18,7 @@ const AdminDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState("create-blog");
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     // Set up auth state listener
@@ -114,6 +117,24 @@ const AdminDashboard = () => {
     }
   };
 
+  // Mobile layout
+  if (isMobile) {
+    return (
+      <div className="min-h-screen flex flex-col w-full pb-16">
+        <header className="h-12 flex items-center border-b border-border px-3 bg-background sticky top-0 z-40">
+          <h2 className="text-base font-semibold truncate">Admin Dashboard</h2>
+        </header>
+        
+        <main className="flex-1 p-3 bg-background overflow-auto">
+          {renderContent()}
+        </main>
+
+        <MobileBottomNav currentView={currentView} onViewChange={setCurrentView} />
+      </div>
+    );
+  }
+
+  // Desktop layout
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
