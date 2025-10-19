@@ -103,7 +103,7 @@ export const Contact = () => {
             <Button 
               type="submit" 
               size="lg" 
-              className="w-full h-14 rounded-xl text-lg font-semibold bg-primary hover:bg-primary/90 hover:scale-105 transition-all shadow-lg hover:shadow-xl"
+              className="w-full h-14 rounded-xl text-lg font-semibold bg-[#F70000] hover:bg-[#F70000]/90 text-white hover:scale-105 transition-all shadow-lg hover:shadow-xl"
             >
               <span className="mr-2">Pošalji poruku</span>
               <span>📨</span>
