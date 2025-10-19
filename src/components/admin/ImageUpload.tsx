@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useId } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +22,7 @@ export function ImageUpload({
   const [urlInput, setUrlInput] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const uploadInputId = useId();
 
   const uploadFile = async (file: File) => {
     try {
@@ -108,11 +109,11 @@ export function ImageUpload({
               multiple={acceptMultiple}
               onChange={handleFileChange}
               className="hidden"
-              id={`file-upload-${Math.random()}`}
+              id={uploadInputId}
               disabled={uploading}
             />
             <label 
-              htmlFor={`file-upload-${Math.random()}`}
+              htmlFor={uploadInputId}
               className="cursor-pointer flex flex-col items-center gap-2"
             >
               {uploading ? (
