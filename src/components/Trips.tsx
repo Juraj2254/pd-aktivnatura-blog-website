@@ -18,7 +18,7 @@ interface Trip {
 }
 
 export const Trips = () => {
-  const [viewMode, setViewMode] = useState<'grid' | 'gallery'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'gallery'>('gallery');
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
 
