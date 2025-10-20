@@ -118,7 +118,7 @@ export const Contact = () => {
             >
               <div className="text-3xl mb-2">📧</div>
               <div className="text-sm text-muted-foreground mb-1">Email</div>
-              <div className="text-sm font-medium text-primary hover:underline">dolores.vesligaj@gmail.com</div>
+              <div className="text-xs md:text-sm font-medium text-primary hover:underline break-all px-2">dolores.vesligaj@gmail.com</div>
             </a>
             <a 
               href="tel:+385997325535"
