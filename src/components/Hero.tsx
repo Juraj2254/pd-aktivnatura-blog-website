@@ -20,8 +20,19 @@ export const Hero = () => {
         <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
           Pridruži se AktivNatura klubu i istraži najljepše planine Hrvatske
         </p>
-        <Button variant="hero" size="lg" className="text-lg bg-[#F70000] hover:bg-[#F70000]/90 text-white">
-          Pogledaj kalendar izleta
+        <Button 
+          variant="hero" 
+          size="lg" 
+          className="text-lg bg-[#F70000] hover:bg-[#F70000]/90 text-white"
+          asChild
+        >
+          <a 
+            href="https://docs.google.com/spreadsheets/d/17WSd1XLRbwNPKmA0rDV-GUVA2rPH8gydr6EJsg_7Rwo/edit?gid=1652722319#gid=1652722319"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pogledaj kalendar izleta
+          </a>
         </Button>
       </div>
     </section>
