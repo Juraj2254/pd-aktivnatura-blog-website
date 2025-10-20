@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
-import { Calendar, Users, MapPin, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import tripsHero from "@/assets/trips-hero.jpg";
+import { FocusCards } from "@/components/ui/focus-cards";
 
 interface Trip {
   id: string;
@@ -26,7 +26,6 @@ interface Trip {
 const TripsPage = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   useEffect(() => {
     fetchTrips();
@@ -103,80 +102,17 @@ const TripsPage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-            {trips.map((trip, index) => (
-              <Link
-                key={trip.id}
-                to={`/izleti/${trip.slug}`}
-                className="group block"
-                onMouseEnter={() => setHoveredIndex(index)}
-                onMouseLeave={() => setHoveredIndex(null)}
-              >
-                <article 
-                  className="relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-all duration-500 animate-fade-in bg-card"
-                  style={{
-                    animationDelay: `${index * 100}ms`,
-                  }}
-                >
-                  {/* Image */}
-                  <div className="relative h-[300px] md:h-[400px] overflow-hidden">
-                    <img
-                      src={trip.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070"}
-                      alt={trip.title}
-                      className={`w-full h-full object-cover transition-transform duration-700 ${
-                        hoveredIndex === index ? "scale-110" : "scale-100"
-                      }`}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent opacity-90" />
-                    
-                    {/* Category Badge */}
-                    {trip.categories && (
-                      <div className="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm text-primary-foreground px-3 py-1 rounded-full text-sm font-medium">
-                        {trip.categories.name}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground group-hover:text-primary transition-colors">
-                      {trip.title}
-                    </h2>
-                    
-                    {trip.subtitle && (
-                      <p className="text-muted-foreground mb-4 line-clamp-2">
-                        {trip.subtitle}
-                      </p>
-                    )}
-
-                    {/* Meta Information */}
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                      {trip.date && (
-                        <div className="flex items-center gap-2">
-                          <Calendar className="h-4 w-4" />
-                          <span>{formatDate(trip.date)}</span>
-                        </div>
-                      )}
-                      
-                      {trip.max_participants && (
-                        <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4" />
-                          <span>{trip.max_participants} sudionika</span>
-                        </div>
-                      )}
-                      
-                      {trip.location && (
-                        <div className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4" />
-                          <span>{trip.location}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </article>
-              </Link>
-            ))}
-          </div>
+          <FocusCards
+            cards={trips.map((trip) => ({
+              id: trip.id,
+              title: trip.title,
+              slug: trip.slug,
+              src: trip.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070",
+              category: trip.categories?.name,
+              date: formatDate(trip.date),
+              attendees: trip.max_participants || undefined,
+            }))}
+          />
         )}
       </main>
 
