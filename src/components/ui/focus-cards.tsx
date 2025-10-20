@@ -41,21 +41,21 @@ const Card = React.memo(
       />
       <div
         className={cn(
-          "absolute inset-0 bg-gradient-to-t from-background/95 via-background/60 to-transparent flex flex-col justify-end p-4 md:p-6 transition-opacity duration-300",
+          "absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent flex flex-col justify-end p-4 md:p-6 transition-opacity duration-300",
           hovered === index ? "opacity-100" : "opacity-0"
         )}
       >
         {card.category && (
           <div className="mb-2">
-            <span className="inline-block bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-xs md:text-sm font-medium">
+            <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs md:text-sm font-medium shadow-lg">
               {card.category}
             </span>
           </div>
         )}
-        <h3 className="text-xl md:text-2xl font-bold text-foreground mb-3">
+        <h3 className="text-xl md:text-2xl font-bold text-white mb-3 drop-shadow-lg">
           {card.title}
         </h3>
-        <div className="flex flex-wrap gap-3 md:gap-4 text-sm text-muted-foreground">
+        <div className="flex flex-wrap gap-3 md:gap-4 text-sm text-white/90">
           {card.date && (
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
