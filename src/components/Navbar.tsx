@@ -40,9 +40,11 @@ export const Navbar = () => {
                 {item.name}
               </Link>
             ))}
-            <Button variant="hero" size="sm" className="bg-[#F70000] hover:bg-[#F70000]/90 text-white">
-              <Phone className="h-4 w-4" />
-              Nazovi nas
+            <Button variant="hero" size="sm" className="bg-[#F70000] hover:bg-[#F70000]/90 text-white" asChild>
+              <a href="tel:+385997325535">
+                <Phone className="h-4 w-4" />
+                Nazovi nas
+              </a>
             </Button>
           </div>
 
@@ -72,9 +74,11 @@ export const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
-              <Button variant="hero" size="sm" className="w-full bg-[#F70000] hover:bg-[#F70000]/90 text-white">
-                <Phone className="h-4 w-4" />
-                Nazovi nas
+              <Button variant="hero" size="sm" className="w-full bg-[#F70000] hover:bg-[#F70000]/90 text-white" asChild>
+                <a href="tel:+385997325535">
+                  <Phone className="h-4 w-4" />
+                  Nazovi nas
+                </a>
               </Button>
             </div>
           </div>
