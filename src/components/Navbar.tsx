@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, X, Phone } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import logo from "@/assets/logo.png";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
 
   const navItems = [
@@ -16,6 +18,32 @@ export const Navbar = () => {
   ];
 
   const isActive = (path: string) => location.pathname === path;
+
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('user_roles')
+          .select('role')
+          .eq('user_id', user.id)
+          .eq('role', 'admin')
+          .single();
+        
+        setIsAdmin(!!data && !error);
+      } else {
+        setIsAdmin(false);
+      }
+    };
+
+    checkAdminStatus();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => {
+      checkAdminStatus();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   return (
     <nav className="z-50 bg-background/95 backdrop-blur-lg border-b shadow-sm">
@@ -40,6 +68,16 @@ export const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`text-sm font-medium transition-colors hover:text-primary ${
+                  isActive("/admin") ? "text-primary" : "text-foreground/70"
+                }`}
+              >
+                Admin portal
+              </Link>
+            )}
             <Button variant="hero" size="sm" className="bg-[#F70000] hover:bg-[#F70000]/90 text-white" asChild>
               <a href="tel:+385997325535">
                 <Phone className="h-4 w-4" />
@@ -74,6 +112,17 @@ export const Navbar = () => {
                   {item.name}
                 </Link>
               ))}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsOpen(false)}
+                  className={`text-sm font-medium transition-colors hover:text-primary ${
+                    isActive("/admin") ? "text-primary" : "text-foreground/70"
+                  }`}
+                >
+                  Admin portal
+                </Link>
+              )}
               <Button variant="hero" size="sm" className="w-full bg-[#F70000] hover:bg-[#F70000]/90 text-white" asChild>
                 <a href="tel:+385997325535">
                   <Phone className="h-4 w-4" />
