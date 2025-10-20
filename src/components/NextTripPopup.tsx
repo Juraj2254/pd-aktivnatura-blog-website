@@ -103,6 +103,9 @@ export const NextTripPopup = () => {
 
         <div className="p-6 space-y-4">
           <div className="space-y-2">
+            <h2 className="text-lg font-semibold text-muted-foreground">
+              Sljedeći izlet:
+            </h2>
             <h2 className="text-2xl font-bold text-foreground">
               {featuredTrip.title}
             </h2>
