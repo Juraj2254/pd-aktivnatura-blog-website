@@ -24,7 +24,9 @@ export const Footer = () => {
               <Facebook className="h-6 w-6" />
             </a>
             <a 
-              href="#" 
+              href="https://www.instagram.com/aktivnaturaplaninar/" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
               aria-label="Instagram"
             >
