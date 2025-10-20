@@ -1,36 +1,4 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-
 export const Contact = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
-      toast.error("Molimo ispunite sva polja");
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast.error("Molimo unesite validnu email adresu");
-      return;
-    }
-
-    toast.success("Poruka uspješno poslana!");
-    setFormData({ name: "", email: "", message: "" });
-  };
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
@@ -58,57 +26,6 @@ export const Contact = () => {
             </p>
           </div>
 
-          {/* Contact Form */}
-          <form 
-            onSubmit={handleSubmit} 
-            className="space-y-6 bg-card/50 backdrop-blur-sm p-6 md:p-8 rounded-2xl shadow-lg border border-border/50 animate-fade-in"
-            style={{ animationDelay: "200ms" }}
-          >
-            <div className="space-y-2">
-              <Label htmlFor="name" className="text-base">Ime</Label>
-              <Input
-                id="name"
-                type="text"
-                placeholder="Vaše ime"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-12 rounded-xl border-2 focus:border-primary transition-colors"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-base">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="vas.email@example.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="h-12 rounded-xl border-2 focus:border-primary transition-colors"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="message" className="text-base">Poruka</Label>
-              <Textarea
-                id="message"
-                placeholder="Vaša poruka... Recite nam što vas zanima ili kako vam možemo pomoći!"
-                rows={6}
-                value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="rounded-xl border-2 focus:border-primary transition-colors resize-none"
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              size="lg" 
-              className="w-full h-14 rounded-xl text-lg font-semibold bg-[#F70000] hover:bg-[#F70000]/90 text-white hover:scale-105 transition-all shadow-lg hover:shadow-xl"
-            >
-              <span className="mr-2">Pošalji poruku</span>
-              <span>📨</span>
-            </Button>
-          </form>
 
           {/* Contact Info */}
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in" style={{ animationDelay: "400ms" }}>
