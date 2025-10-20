@@ -1,4 +1,4 @@
-import { Home, FileText, MapPin, LogOut, PlusCircle, Edit } from "lucide-react";
+import { Home, FileText, MapPin, LogOut, PlusCircle, Edit, Star } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -108,6 +108,36 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
                 >
                   <Edit className="h-4 w-4" />
                   {open && <span className="ml-2">Uredi Izlete</span>}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-xs sm:text-sm px-2">Istaknuti Izlet</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => onViewChange("create-next-trip")}
+                  isActive={currentView === "create-next-trip"}
+                  tooltip={!open ? "Kreiraj Istaknuti Izlet" : undefined}
+                  className="text-sm"
+                >
+                  <Star className="h-4 w-4" />
+                  {open && <span className="ml-2">Kreiraj Istaknuti Izlet</span>}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => onViewChange("edit-next-trip")}
+                  isActive={currentView === "edit-next-trip"}
+                  tooltip={!open ? "Uredi Istaknuti Izlet" : undefined}
+                  className="text-sm"
+                >
+                  <Edit className="h-4 w-4" />
+                  {open && <span className="ml-2">Uredi Istaknuti Izlet</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

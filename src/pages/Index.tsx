@@ -5,6 +5,7 @@ import { Trips } from "@/components/Trips";
 import { Blog } from "@/components/Blog";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { NextTripPopup } from "@/components/NextTripPopup";
 
 const Index = () => {
   return (
@@ -18,6 +19,7 @@ const Index = () => {
         <Contact />
       </main>
       <Footer />
+      <NextTripPopup />
     </div>
   );
 };

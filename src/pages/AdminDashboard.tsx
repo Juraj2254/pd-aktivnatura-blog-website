@@ -9,6 +9,8 @@ import { CreateBlogForm } from "@/components/admin/CreateBlogForm";
 import { CreateTripForm } from "@/components/admin/CreateTripForm";
 import { EditBlogsList } from "@/components/admin/EditBlogsList";
 import { EditTripsList } from "@/components/admin/EditTripsList";
+import { CreateNextTripForm } from "@/components/admin/CreateNextTripForm";
+import { EditNextTripList } from "@/components/admin/EditNextTripList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -94,6 +96,14 @@ const AdminDashboard = () => {
           </div>;
       case "edit-trips":
         return <EditTripsList />;
+      case "create-next-trip":
+        return <div className="w-full max-w-[800px] mx-auto">
+            <CreateNextTripForm />
+          </div>;
+      case "edit-next-trip":
+        return <div className="w-full max-w-[800px] mx-auto">
+            <EditNextTripList />
+          </div>;
       default:
         return <div className="w-full max-w-[800px] mx-auto">
             <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Dobrodošli u Admin Panel</h1>

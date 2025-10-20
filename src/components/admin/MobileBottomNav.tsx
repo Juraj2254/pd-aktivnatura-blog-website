@@ -1,4 +1,4 @@
-import { Home, FileText, Map, LogOut } from "lucide-react";
+import { Home, FileText, Map, LogOut, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +47,18 @@ export const MobileBottomNav = ({
       view: "edit-trips"
     }]
   }, {
+    id: "featured",
+    icon: Star,
+    label: "Istaknuti",
+    hasSubmenu: true,
+    submenuItems: [{
+      label: "Kreiraj Istaknuti Izlet",
+      view: "create-next-trip"
+    }, {
+      label: "Uredi Istaknuti Izlet",
+      view: "edit-next-trip"
+    }]
+  }, {
     id: "more",
     icon: LogOut,
     label: "Odjavi se",
@@ -55,7 +67,8 @@ export const MobileBottomNav = ({
   const isActive = (itemId: string, view?: string) => {
     if (view) return currentView === view;
     if (itemId === "blog") return currentView.includes("blog");
-    if (itemId === "trips") return currentView.includes("trip");
+    if (itemId === "trips") return currentView.includes("trip") && !currentView.includes("next-trip");
+    if (itemId === "featured") return currentView.includes("next-trip");
     if (itemId === "home") return currentView === "home" || !currentView;
     return false;
   };

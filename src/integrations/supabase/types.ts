@@ -97,6 +97,47 @@ export type Database = {
         }
         Relationships: []
       }
+      featured_trip: {
+        Row: {
+          cover_image: string | null
+          created_at: string | null
+          date: string
+          id: string
+          is_active: boolean | null
+          title: string
+          trip_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cover_image?: string | null
+          created_at?: string | null
+          date: string
+          id?: string
+          is_active?: boolean | null
+          title: string
+          trip_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cover_image?: string | null
+          created_at?: string | null
+          date?: string
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          trip_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "featured_trip_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trips: {
         Row: {
           category_id: string | null
