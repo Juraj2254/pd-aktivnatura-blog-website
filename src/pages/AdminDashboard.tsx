@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import type { User, Session } from "@supabase/supabase-js";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -10,6 +10,8 @@ import { CreateTripForm } from "@/components/admin/CreateTripForm";
 import { EditBlogsList } from "@/components/admin/EditBlogsList";
 import { EditTripsList } from "@/components/admin/EditTripsList";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Home } from "lucide-react";
+import { Button } from "@/components/ui/button";
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -105,8 +107,14 @@ const AdminDashboard = () => {
   // Mobile layout
   if (isMobile) {
     return <div className="min-h-screen flex flex-col w-full pb-16">
-        <header className="h-12 flex items-center border-b border-border px-3 sticky top-0 z-40 bg-slate-50">
+        <header className="h-12 flex items-center justify-between border-b border-border px-3 sticky top-0 z-40 bg-slate-50">
+          <Link to="/">
+            <Button variant="ghost" size="icon" className="h-8 w-8" title="Povratak na početnu">
+              <Home className="h-4 w-4" />
+            </Button>
+          </Link>
           <h2 className="text-base font-semibold truncate">Admin Dashboard</h2>
+          <div className="w-8" />
         </header>
         
         <main className="flex-1 p-3 bg-background overflow-auto">
