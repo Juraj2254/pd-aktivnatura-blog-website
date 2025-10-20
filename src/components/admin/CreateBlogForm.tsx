@@ -75,7 +75,7 @@ export function CreateBlogForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full space-y-6 p-4 sm:p-6 bg-background rounded-lg">
+    <form onSubmit={handleSubmit} className="w-full max-w-[800px] mx-auto space-y-6 p-4 sm:p-6 bg-background rounded-lg">
 
       <div className="space-y-6">
         <div>

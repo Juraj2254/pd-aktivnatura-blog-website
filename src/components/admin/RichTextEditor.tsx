@@ -243,7 +243,7 @@ export function RichTextEditor({
   );
 
   return (
-    <div className="w-full border border-input rounded-md bg-background">
+    <div className="w-full max-w-[1000px] border border-input rounded-md bg-background">
       {/* Toolbar */}
       <div key={toolbarRefreshKey} className="border-b border-input p-1.5 sm:p-2 flex flex-wrap gap-0.5 sm:gap-1 bg-background">
         {/* Text Formatting */}
