@@ -15,7 +15,9 @@ export const Footer = () => {
           {/* Social Links */}
           <div className="flex gap-6">
             <a 
-              href="#" 
+              href="https://www.facebook.com/AktivNatura" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="hover:text-accent transition-colors"
               aria-label="Facebook"
             >
