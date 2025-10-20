@@ -125,11 +125,16 @@ export const Contact = () => {
               <div className="text-sm text-muted-foreground mb-1">Telefon</div>
               <div className="text-sm font-medium text-primary hover:underline">+385 99/732 5535</div>
             </a>
-            <div className="text-center p-6 bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 hover:shadow-lg transition-shadow">
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=TRG+FRANCUSKE+REPUBLIKE+11"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center p-6 bg-card/30 backdrop-blur-sm rounded-xl border border-border/50 hover:shadow-lg transition-all hover:scale-105"
+            >
               <div className="text-3xl mb-2">📍</div>
               <div className="text-sm text-muted-foreground mb-1">Lokacija</div>
-              <div className="text-sm font-medium">Zagreb, Hrvatska</div>
-            </div>
+              <div className="text-sm font-medium text-primary hover:underline">TRG FRANCUSKE REPUBLIKE 11</div>
+            </a>
           </div>
         </div>
       </div>
