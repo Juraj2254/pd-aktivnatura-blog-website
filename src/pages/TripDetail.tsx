@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Calendar, Users, MapPin, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 
 interface Trip {
   id: string;
@@ -131,7 +132,7 @@ const TripDetail = () => {
 
       {/* Content */}
       <article className="container mx-auto px-4 -mt-24 relative z-10">
-        <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-2xl p-6 md:p-12">
+        <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-2xl p-6 md:p-12 mt-8">
           {/* Category Badge */}
           {trip.categories && (
             <span className="inline-block bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium mb-4">
@@ -198,9 +199,18 @@ const TripDetail = () => {
           <div className="mt-12 pt-8 border-t border-border">
             <div className="text-center">
               <h3 className="text-2xl font-bold mb-4">Zainteresirani?</h3>
-              <p className="text-muted-foreground mb-6">
-                Kontaktirajte nas za više informacija i prijavu
-              </p>
+              <TypewriterEffectSmooth
+                words={[
+                  { text: "Kontaktirajte" },
+                  { text: "nas" },
+                  { text: "za" },
+                  { text: "više" },
+                  { text: "informacija" },
+                  { text: "i" },
+                  { text: "prijavu" },
+                ]}
+                className="mb-6 justify-center"
+              />
               <Link to="/kontakt">
                 <Button size="lg" variant="default">
                   Kontaktiraj nas
