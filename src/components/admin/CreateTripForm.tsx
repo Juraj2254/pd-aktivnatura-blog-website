@@ -102,7 +102,7 @@ export function CreateTripForm() {
             onChange={(e) => setTitle(e.target.value)}
             required
             className="text-lg h-12 mt-2"
-            placeholder="Unesite naslov tripa..."
+            placeholder="Unesi naslov..."
           />
         </div>
 
