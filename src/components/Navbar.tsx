@@ -28,7 +28,7 @@ export const Navbar = () => {
           .select('role')
           .eq('user_id', user.id)
           .eq('role', 'admin')
-          .single();
+          .maybeSingle();
         
         setIsAdmin(!!data && !error);
       } else {
@@ -70,9 +70,9 @@ export const Navbar = () => {
             ))}
             {isAdmin && (
               <Link
-                to="/admin"
+                to="/admin-dashboard"
                 className={`text-sm font-medium transition-colors hover:text-primary ${
-                  isActive("/admin") ? "text-primary" : "text-foreground/70"
+                  isActive("/admin-dashboard") ? "text-primary" : "text-foreground/70"
                 }`}
               >
                 Admin portal
@@ -114,10 +114,10 @@ export const Navbar = () => {
               ))}
               {isAdmin && (
                 <Link
-                  to="/admin"
+                  to="/admin-dashboard"
                   onClick={() => setIsOpen(false)}
                   className={`text-sm font-medium transition-colors hover:text-primary ${
-                    isActive("/admin") ? "text-primary" : "text-foreground/70"
+                    isActive("/admin-dashboard") ? "text-primary" : "text-foreground/70"
                   }`}
                 >
                   Admin portal
