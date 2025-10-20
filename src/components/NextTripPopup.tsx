@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Phone } from "lucide-react";
+import { Phone } from "lucide-react";
 import { format } from "date-fns";
 import { hr } from "date-fns/locale";
 
@@ -83,17 +83,14 @@ export const NextTripPopup = () => {
 
   const formattedDate = format(new Date(featuredTrip.date), "dd. MMMM yyyy.", { locale: hr });
 
+  const handleContactClick = () => {
+    window.location.href = 'tel:+385997325535';
+    handleClose();
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-md p-0 gap-0 overflow-hidden">
-        <DialogClose 
-          className="absolute right-4 top-4 z-10 rounded-full bg-background/80 p-2 opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none"
-          onClick={handleClose}
-        >
-          <X className="h-4 w-4" />
-          <span className="sr-only">Close</span>
-        </DialogClose>
-
         {featuredTrip.cover_image && (
           <div className="w-full h-48 overflow-hidden">
             <img 
@@ -117,7 +114,7 @@ export const NextTripPopup = () => {
           <Button 
             className="w-full" 
             size="lg"
-            onClick={() => window.location.href = 'tel:+385997325535'}
+            onClick={handleContactClick}
           >
             <Phone className="mr-2 h-5 w-5" />
             Kontaktiraj nas
