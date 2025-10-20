@@ -79,21 +79,21 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (currentView) {
       case "create-blog":
-        return <div className="max-w-4xl">
+        return <div className="w-full">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Blog Post</h1>
             <CreateBlogForm />
           </div>;
       case "edit-blogs":
         return <EditBlogsList />;
       case "create-trip":
-        return <div className="max-w-4xl">
+        return <div className="w-full">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Izlet</h1>
             <CreateTripForm />
           </div>;
       case "edit-trips":
         return <EditTripsList />;
       default:
-        return <div className="max-w-4xl">
+        return <div className="w-full max-w-4xl">
             <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Dobrodošli u Admin Panel</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
               Odaberite opciju iz sidebar-a za upravljanje sadržajem.
