@@ -1,10 +1,8 @@
 'use client';
-import { ReactLenis } from 'lenis/react';
 import React, { forwardRef } from 'react';
 
 const Component = forwardRef<HTMLElement>((props, ref) => {
   return (
-    <ReactLenis root>
       <main className='bg-black' ref={ref}>
         <div className='wrapper'>
           <section className='text-white  h-screen  w-full bg-slate-950  grid place-content-center sticky top-0'>
@@ -128,7 +126,6 @@ const Component = forwardRef<HTMLElement>((props, ref) => {
           <div className='bg-black h-40 relative z-10 grid place-content-center text-2xl rounded-tr-full rounded-tl-full'></div>
         </footer>
       </main>
-    </ReactLenis>
   );
 });
 
