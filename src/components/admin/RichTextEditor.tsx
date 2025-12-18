@@ -281,10 +281,10 @@ export function RichTextEditor({
       aria-pressed={isActive}
       data-state={isActive ? "on" : "off"}
       className={cn(
-        "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background",
+        "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all rounded-lg",
         isActive 
-          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md ring-2 ring-primary/30" 
-          : "hover:bg-accent"
+          ? "bg-gray-700 text-white hover:bg-gray-600 shadow-sm" 
+          : "hover:bg-gray-200 dark:hover:bg-gray-700"
       )}
       title={title}
     >
@@ -362,7 +362,7 @@ export function RichTextEditor({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent"
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                 title="Text Color"
                 onMouseDown={(e) => e.preventDefault()}
               >
@@ -448,10 +448,10 @@ export function RichTextEditor({
                 variant="ghost"
                 size="sm"
                 className={cn(
-                  "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all",
+                  "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all rounded-lg",
                   editor.isActive("link") 
-                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md ring-2 ring-primary/30" 
-                    : "hover:bg-accent"
+                    ? "bg-gray-700 text-white hover:bg-gray-600 shadow-sm" 
+                    : "hover:bg-gray-200 dark:hover:bg-gray-700"
                 )}
                 title="Add Link"
                 onMouseDown={(e) => e.preventDefault()}
@@ -493,7 +493,7 @@ export function RichTextEditor({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent"
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700"
                 title="Add Image"
                 onMouseDown={(e) => e.preventDefault()}
               >
