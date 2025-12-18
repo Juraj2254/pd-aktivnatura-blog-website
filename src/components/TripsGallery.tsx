@@ -85,7 +85,7 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
             </div>
 
             {/* Center Column - Sticky on desktop only */}
-            <div className='md:sticky md:top-0 md:h-screen w-full md:col-span-4 gap-2 md:gap-4 grid grid-rows-1 md:grid-rows-3'>
+            <div className='md:sticky md:top-0 md:h-screen w-full md:col-span-4 gap-2 md:gap-4 grid grid-rows-1 md:grid-rows-4'>
               {galleryImages.center.map((src, idx) => (
                 <figure key={`center-${idx}`} className='w-full h-48 sm:h-56 md:h-full'>
                   <img
