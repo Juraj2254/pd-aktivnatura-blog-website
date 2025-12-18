@@ -8,6 +8,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import Placeholder from "@tiptap/extension-placeholder";
 import FontFamily from "@tiptap/extension-font-family";
+import { Extension } from "@tiptap/core";
 import {
   Bold,
   Italic,
@@ -58,6 +59,47 @@ import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { ImageUpload } from "./ImageUpload";
 
+// Custom FontSize extension for TipTap
+const FontSize = Extension.create({
+  name: 'fontSize',
+  addOptions() {
+    return {
+      types: ['textStyle'],
+    };
+  },
+  addGlobalAttributes() {
+    return [
+      {
+        types: this.options.types,
+        attributes: {
+          fontSize: {
+            default: null,
+            parseHTML: element => element.style.fontSize || null,
+            renderHTML: attributes => {
+              if (!attributes.fontSize) {
+                return {};
+              }
+              return {
+                style: `font-size: ${attributes.fontSize}`,
+              };
+            },
+          },
+        },
+      },
+    ];
+  },
+  addCommands() {
+    return {
+      setFontSize: (fontSize: string) => ({ chain }: any) => {
+        return chain().setMark('textStyle', { fontSize }).run();
+      },
+      unsetFontSize: () => ({ chain }: any) => {
+        return chain().setMark('textStyle', { fontSize: null }).removeEmptyTextStyle().run();
+      },
+    };
+  },
+});
+
 interface RichTextEditorProps {
   content: string;
   onChange: (content: string) => void;
@@ -75,6 +117,7 @@ export function RichTextEditor({
   const [isImageDialogOpen, setIsImageDialogOpen] = useState(false);
   const [textColor, setTextColor] = useState("#000000");
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedFontSize, setSelectedFontSize] = useState<string>("");
   const { toast } = useToast();
   const [imageTab, setImageTab] = useState<string>("upload");
 
@@ -87,6 +130,7 @@ export function RichTextEditor({
       TextStyle,
       Color,
       FontFamily,
+      FontSize,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
@@ -198,8 +242,9 @@ export function RichTextEditor({
     }
   }, [editor]);
 
-  const setFontSize = useCallback((size: string) => {
+  const handleFontSizeChange = useCallback((size: string) => {
     if (editor) {
+      setSelectedFontSize(size);
       editor.chain().focus().setMark('textStyle', { fontSize: size }).run();
     }
   }, [editor]);
@@ -215,12 +260,12 @@ export function RichTextEditor({
   }
 
   const MenuButton = ({
-    onClick,
+    onAction,
     isActive = false,
     children,
     title,
   }: {
-    onClick: () => void;
+    onAction: () => void;
     isActive?: boolean;
     children: React.ReactNode;
     title: string;
@@ -229,12 +274,17 @@ export function RichTextEditor({
       type="button"
       variant="ghost"
       size="sm"
-      onClick={onClick}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        onAction();
+      }}
       aria-pressed={isActive}
       data-state={isActive ? "on" : "off"}
       className={cn(
-        "h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent transition-all focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background",
-        isActive && "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm ring-1 ring-primary/20"
+        "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all focus-visible:ring-2 ring-ring ring-offset-2 ring-offset-background",
+        isActive 
+          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md ring-2 ring-primary/30" 
+          : "hover:bg-accent"
       )}
       title={title}
     >
@@ -249,28 +299,28 @@ export function RichTextEditor({
         {/* Text Formatting */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input">
           <MenuButton
-            onClick={() => editor.chain().focus().toggleBold().run()}
+            onAction={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive("bold")}
             title="Bold (Ctrl+B)"
           >
             <Bold className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().toggleItalic().run()}
+            onAction={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive("italic")}
             title="Italic (Ctrl+I)"
           >
             <Italic className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            onAction={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive("underline")}
             title="Underline (Ctrl+U)"
           >
             <UnderlineIcon className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
+            onAction={() => editor.chain().focus().toggleStrike().run()}
             isActive={editor.isActive("strike")}
             title="Strikethrough"
           >
@@ -280,21 +330,25 @@ export function RichTextEditor({
 
         {/* Font Size Dropdown */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input items-center">
-          <Select onValueChange={setFontSize}>
-            <SelectTrigger className="w-[80px] sm:w-[100px] h-7 sm:h-8 text-xs bg-background">
+          <Select value={selectedFontSize} onValueChange={handleFontSizeChange}>
+            <SelectTrigger 
+              className="w-[80px] sm:w-[100px] h-7 sm:h-8 text-xs bg-background"
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <Type className="h-3 w-3 mr-1" />
               <SelectValue placeholder="Size" />
             </SelectTrigger>
-            <SelectContent side="bottom" align="start" className="z-50">
+            <SelectContent side="bottom" align="start" className="z-[100] bg-background">
               <SelectItem value="12px">12px</SelectItem>
+              <SelectItem value="14px">14px</SelectItem>
               <SelectItem value="16px">16px</SelectItem>
+              <SelectItem value="18px">18px</SelectItem>
               <SelectItem value="20px">20px</SelectItem>
               <SelectItem value="24px">24px</SelectItem>
               <SelectItem value="28px">28px</SelectItem>
               <SelectItem value="32px">32px</SelectItem>
               <SelectItem value="36px">36px</SelectItem>
               <SelectItem value="40px">40px</SelectItem>
-              <SelectItem value="44px">44px</SelectItem>
               <SelectItem value="48px">48px</SelectItem>
             </SelectContent>
           </Select>
@@ -308,13 +362,14 @@ export function RichTextEditor({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent"
                 title="Text Color"
+                onMouseDown={(e) => e.preventDefault()}
               >
                 <Palette className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-64 p-4">
+            <PopoverContent className="w-64 p-4 z-[100] bg-background">
               <div className="space-y-3">
                 <Label htmlFor="text-color">Text Color</Label>
                 <div className="flex gap-2 items-center">
@@ -337,14 +392,14 @@ export function RichTextEditor({
         {/* Lists */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input">
           <MenuButton
-            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            onAction={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive("bulletList")}
             title="Bullet List"
           >
             <List className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            onAction={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive("orderedList")}
             title="Numbered List"
           >
@@ -355,28 +410,28 @@ export function RichTextEditor({
         {/* Text Alignment */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input">
           <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("left").run()}
+            onAction={() => editor.chain().focus().setTextAlign("left").run()}
             isActive={editor.isActive({ textAlign: "left" })}
             title="Align Left"
           >
             <AlignLeft className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("center").run()}
+            onAction={() => editor.chain().focus().setTextAlign("center").run()}
             isActive={editor.isActive({ textAlign: "center" })}
             title="Align Center"
           >
             <AlignCenter className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("right").run()}
+            onAction={() => editor.chain().focus().setTextAlign("right").run()}
             isActive={editor.isActive({ textAlign: "right" })}
             title="Align Right"
           >
             <AlignRight className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+            onAction={() => editor.chain().focus().setTextAlign("justify").run()}
             isActive={editor.isActive({ textAlign: "justify" })}
             title="Justify"
           >
@@ -392,8 +447,14 @@ export function RichTextEditor({
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent"
+                className={cn(
+                  "h-7 w-7 sm:h-8 sm:w-8 p-0 transition-all",
+                  editor.isActive("link") 
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md ring-2 ring-primary/30" 
+                    : "hover:bg-accent"
+                )}
                 title="Add Link"
+                onMouseDown={(e) => e.preventDefault()}
               >
                 <LinkIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
@@ -434,6 +495,7 @@ export function RichTextEditor({
                 size="sm"
                 className="h-7 w-7 sm:h-8 sm:w-8 p-0 hover:bg-accent"
                 title="Add Image"
+                onMouseDown={(e) => e.preventDefault()}
               >
                 <ImageIcon className="h-3 w-3 sm:h-4 sm:w-4" />
               </Button>
@@ -492,13 +554,15 @@ export function RichTextEditor({
         {/* Utility */}
         <div className="flex gap-0.5 sm:gap-1 pr-1.5 sm:pr-2 border-r border-input">
           <MenuButton
-            onClick={() => editor.chain().focus().undo().run()}
+            onAction={() => editor.chain().focus().undo().run()}
+            isActive={false}
             title="Undo (Ctrl+Z)"
           >
             <Undo className="h-3 w-3 sm:h-4 sm:w-4" />
           </MenuButton>
           <MenuButton
-            onClick={() => editor.chain().focus().redo().run()}
+            onAction={() => editor.chain().focus().redo().run()}
+            isActive={false}
             title="Redo (Ctrl+Y)"
           >
             <Redo className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -507,7 +571,8 @@ export function RichTextEditor({
 
         <div className="flex gap-0.5 sm:gap-1">
           <MenuButton
-            onClick={() => editor.chain().focus().unsetAllMarks().run()}
+            onAction={() => editor.chain().focus().unsetAllMarks().run()}
+            isActive={false}
             title="Clear Formatting"
           >
             <RemoveFormatting className="h-3 w-3 sm:h-4 sm:w-4" />
