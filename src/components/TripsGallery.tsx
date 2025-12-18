@@ -10,6 +10,10 @@ import gallery7 from '@/assets/gallery-7.jpg';
 import gallery8 from '@/assets/gallery-8.jpg';
 import gallery9 from '@/assets/gallery-9.jpg';
 import gallery10 from '@/assets/gallery-10.jpg';
+import gallery11 from '@/assets/gallery-11.jpg';
+import gallery12 from '@/assets/gallery-12.jpg';
+import gallery13 from '@/assets/gallery-13.jpg';
+import gallery14 from '@/assets/gallery-14.jpg';
 
 interface TripsGalleryProps {
   images?: {
@@ -21,7 +25,7 @@ interface TripsGalleryProps {
 
 const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref) => {
   const isMobile = useIsMobile();
-  // Gallery images from hiking trips
+  // Gallery images from hiking trips - 14 unique images
   const defaultImages = {
     left: [
       gallery1,
@@ -34,13 +38,14 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
       gallery6,
       gallery8,
       gallery9,
+      gallery14,
     ],
     right: [
       gallery7,
       gallery10,
-      gallery3,
-      gallery4,
-      gallery1,
+      gallery11,
+      gallery12,
+      gallery13,
     ],
   };
 
