@@ -242,7 +242,16 @@ All colors MUST be HSL.
     max-width: 100%;
     height: auto;
     border-radius: 0.5rem;
+  }
+
+  /* Resizable image wrapper styles */
+  .ProseMirror [data-node-view-wrapper] {
     margin: 1em 0;
+  }
+
+  .ProseMirror .node-image {
+    display: inline-block;
+    line-height: 0;
   }
 
   .ProseMirror strong {
