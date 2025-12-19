@@ -20,12 +20,14 @@ export type Database = {
           category_id: string | null
           content: string
           created_at: string
+          end_date: string | null
           excerpt: string | null
           featured_image: string | null
           id: string
           published: boolean
           published_at: string | null
           slug: string
+          start_date: string | null
           title: string
           updated_at: string
         }
@@ -34,12 +36,14 @@ export type Database = {
           category_id?: string | null
           content: string
           created_at?: string
+          end_date?: string | null
           excerpt?: string | null
           featured_image?: string | null
           id?: string
           published?: boolean
           published_at?: string | null
           slug: string
+          start_date?: string | null
           title: string
           updated_at?: string
         }
@@ -48,12 +52,14 @@ export type Database = {
           category_id?: string | null
           content?: string
           created_at?: string
+          end_date?: string | null
           excerpt?: string | null
           featured_image?: string | null
           id?: string
           published?: boolean
           published_at?: string | null
           slug?: string
+          start_date?: string | null
           title?: string
           updated_at?: string
         }
