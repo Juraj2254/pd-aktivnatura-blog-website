@@ -134,7 +134,7 @@ export function CreateBlogForm() {
                       {startDate ? format(startDate, "PPP", { locale: hr }) : "Odaberi datum"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-background border shadow-lg z-50" align="start">
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={startDate}
@@ -175,7 +175,7 @@ export function CreateBlogForm() {
                       {endDate ? format(endDate, "PPP", { locale: hr }) : "Odaberi datum"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-background border shadow-lg z-50" align="start">
+                  <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
                       selected={endDate}
