@@ -17,5 +17,5 @@ Allow: /
 Disallow: /admin-auth
 Disallow: /admin-dashboard
 
-# Sitemap
-Sitemap: https://pd-aktivnatura.hr/sitemap.xml
+# Dynamic Sitemap (edge function)
+Sitemap: https://usumovgvzafrgwvsqzss.supabase.co/functions/v1/sitemap
