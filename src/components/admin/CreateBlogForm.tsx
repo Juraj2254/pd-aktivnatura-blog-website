@@ -109,13 +109,13 @@ export function CreateBlogForm() {
           value={categoryId}
           onChange={setCategoryId}
           type="blog"
-          label="Kategorija"
+          label="Kategorija (opcionalno)"
           optional={true}
         />
 
         {/* Date Range Section */}
         <div className="space-y-3">
-          <Label className="text-base">Raspon datuma <span className="text-muted-foreground text-sm">(opcionalno - za putovanja)</span></Label>
+          <Label className="text-base">Raspon datuma (opcionalno)</Label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Start Date */}
             <div className="space-y-2">
@@ -134,7 +134,7 @@ export function CreateBlogForm() {
                       {startDate ? format(startDate, "PPP", { locale: hr }) : "Odaberi datum"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-popover z-50" align="start">
+                  <PopoverContent className="w-auto p-0 bg-background border shadow-lg z-50" align="start">
                     <Calendar
                       mode="single"
                       selected={startDate}
@@ -175,7 +175,7 @@ export function CreateBlogForm() {
                       {endDate ? format(endDate, "PPP", { locale: hr }) : "Odaberi datum"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0 bg-popover z-50" align="start">
+                  <PopoverContent className="w-auto p-0 bg-background border shadow-lg z-50" align="start">
                     <Calendar
                       mode="single"
                       selected={endDate}
