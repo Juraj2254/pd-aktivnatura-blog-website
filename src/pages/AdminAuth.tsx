@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, XCircle } from "lucide-react";
 import type { User, Session } from "@supabase/supabase-js";
 import { z } from "zod";
+import { SEO } from "@/components/SEO";
 
 // Password validation schema
 const passwordSchema = z.string()
@@ -166,6 +167,7 @@ const AdminAuth = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <SEO title="Admin prijava" noindex />
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>{isSignUp ? "Admin registracija" : "Admin prijava"}</CardTitle>

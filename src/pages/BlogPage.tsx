@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import blogHeroImage from "@/assets/blog-hero.jpg";
+import { SEO } from "@/components/SEO";
 
 interface BlogPost {
   id: string;
@@ -67,6 +68,11 @@ const BlogPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title="Blog"
+        description="Priče, savjeti i inspiracija iz svijeta planinarenja. Čitajte najnovije članke AktivNatura planinskog društva."
+        canonical="/blog"
+      />
       <Navbar />
       
       <main className="flex-1">

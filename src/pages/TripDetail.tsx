@@ -7,6 +7,7 @@ import { Calendar, Users, MapPin, Loader2, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
+import { SEO } from "@/components/SEO";
 
 interface Trip {
   id: string;
@@ -76,9 +77,16 @@ const TripDetail = () => {
     });
   };
 
+  // Strip HTML tags for meta description
+  const getPlainText = (html: string | null) => {
+    if (!html) return "";
+    return html.replace(/<[^>]*>/g, "").substring(0, 155);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen">
+        <SEO title="Učitavanje izleta..." noindex />
         <Navbar />
         <div className="flex items-center justify-center min-h-[60vh]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -91,6 +99,7 @@ const TripDetail = () => {
   if (!trip) {
     return (
       <div className="min-h-screen">
+        <SEO title="Izlet nije pronađen" noindex />
         <Navbar />
         <div className="container mx-auto px-4 py-16 text-center">
           <h1 className="text-3xl font-bold mb-4">Izlet nije pronađen</h1>
@@ -108,6 +117,13 @@ const TripDetail = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title={trip.title}
+        description={trip.subtitle || getPlainText(trip.content) || `Pridruži se izletu ${trip.title} s AktivNatura planinskim društvom.`}
+        canonical={`/izleti/${slug}`}
+        ogImage={trip.featured_image || undefined}
+        ogType="article"
+      />
       <Navbar />
 
       {/* Hero Image */}
