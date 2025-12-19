@@ -7,11 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SEO } from "@/components/SEO";
 
 interface BlogPost {
   id: string;
   title: string;
   content: string;
+  excerpt: string | null;
   featured_image: string | null;
   published_at: string | null;
   created_at: string;
@@ -41,6 +43,7 @@ const BlogPostDetail = () => {
           id,
           title,
           content,
+          excerpt,
           featured_image,
           published_at,
           created_at,
@@ -62,9 +65,16 @@ const BlogPostDetail = () => {
     }
   };
 
+  // Strip HTML tags for meta description
+  const getPlainText = (html: string | null) => {
+    if (!html) return "";
+    return html.replace(/<[^>]*>/g, "").substring(0, 155);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col">
+        <SEO title="Učitavanje članka..." noindex />
         <Navbar />
         <main className="flex-1 pt-20 pb-16">
           <div className="container mx-auto px-4 max-w-4xl">
@@ -87,6 +97,7 @@ const BlogPostDetail = () => {
   if (!post) {
     return (
       <div className="min-h-screen flex flex-col">
+        <SEO title="Članak nije pronađen" noindex />
         <Navbar />
         <main className="flex-1 pt-20 pb-16">
           <div className="container mx-auto px-4 text-center">
@@ -104,6 +115,13 @@ const BlogPostDetail = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <SEO
+        title={post.title}
+        description={post.excerpt || getPlainText(post.content)}
+        canonical={`/blog/${slug}`}
+        ogImage={post.featured_image || undefined}
+        ogType="article"
+      />
       <Navbar />
       
       <main className="flex-1 pt-20 pb-16">

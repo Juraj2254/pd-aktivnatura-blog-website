@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import tripsHero from "@/assets/trips-hero.jpg";
 import { FocusCards } from "@/components/ui/focus-cards";
+import { SEO } from "@/components/SEO";
 
 interface Trip {
   id: string;
@@ -68,6 +69,11 @@ const TripsPage = () => {
   if (loading) {
     return (
       <div className="min-h-screen">
+        <SEO
+          title="Izleti"
+          description="Pregledaj naše planirane izlete i avanture u prirodi. Pridruži se AktivNatura planinskom društvu na uzbudljivim planinarskim turama."
+          canonical="/izleti"
+        />
         <Navbar />
         <div className="flex items-center justify-center min-h-[60vh]">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -79,6 +85,11 @@ const TripsPage = () => {
 
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Izleti"
+        description="Pregledaj naše planirane izlete i avanture u prirodi. Pridruži se AktivNatura planinskom društvu na uzbudljivim planinarskim turama."
+        canonical="/izleti"
+      />
       <Navbar />
       
       {/* Hero Section */}

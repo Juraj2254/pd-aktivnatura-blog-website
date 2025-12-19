@@ -14,6 +14,8 @@ import { EditNextTripList } from "@/components/admin/EditNextTripList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SEO } from "@/components/SEO";
+
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -22,6 +24,7 @@ const AdminDashboard = () => {
   const [currentView, setCurrentView] = useState("create-blog");
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+
   useEffect(() => {
     // Set up auth state listener
     const {
@@ -56,6 +59,7 @@ const AdminDashboard = () => {
     });
     return () => subscription.unsubscribe();
   }, [navigate]);
+
   const checkAdminRole = async (userId: string) => {
     const {
       data,
@@ -68,55 +72,74 @@ const AdminDashboard = () => {
     }
     setLoading(false);
   };
+
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     navigate("/admin-auth");
   };
+
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center">
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <SEO title="Admin Dashboard" noindex />
         <p>Učitavanje...</p>
-      </div>;
+      </div>
+    );
   }
+
   if (!isAdmin) {
     return null;
   }
+
   const renderContent = () => {
     switch (currentView) {
       case "create-blog":
-        return <div className="w-full max-w-[800px] mx-auto">
+        return (
+          <div className="w-full max-w-[800px] mx-auto">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Blog Post</h1>
             <CreateBlogForm />
-          </div>;
+          </div>
+        );
       case "edit-blogs":
         return <EditBlogsList />;
       case "create-trip":
-        return <div className="w-full max-w-[800px] mx-auto">
+        return (
+          <div className="w-full max-w-[800px] mx-auto">
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Kreiraj Izlet</h1>
             <CreateTripForm />
-          </div>;
+          </div>
+        );
       case "edit-trips":
         return <EditTripsList />;
       case "create-next-trip":
-        return <div className="w-full max-w-[800px] mx-auto">
+        return (
+          <div className="w-full max-w-[800px] mx-auto">
             <CreateNextTripForm />
-          </div>;
+          </div>
+        );
       case "edit-next-trip":
-        return <div className="w-full max-w-[800px] mx-auto">
+        return (
+          <div className="w-full max-w-[800px] mx-auto">
             <EditNextTripList />
-          </div>;
+          </div>
+        );
       default:
-        return <div className="w-full max-w-[800px] mx-auto">
+        return (
+          <div className="w-full max-w-[800px] mx-auto">
             <h1 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4">Dobrodošli u Admin Panel</h1>
             <p className="text-sm sm:text-base text-muted-foreground">
               Odaberite opciju iz sidebar-a za upravljanje sadržajem.
             </p>
-          </div>;
+          </div>
+        );
     }
   };
 
   // Mobile layout
   if (isMobile) {
-    return <div className="min-h-screen flex flex-col w-full pb-16">
+    return (
+      <div className="min-h-screen flex flex-col w-full pb-16">
+        <SEO title="Admin Dashboard" noindex />
         <header className="h-12 flex items-center justify-between border-b border-border px-3 sticky top-0 z-40 bg-slate-50">
           <Link to="/">
             <Button variant="ghost" size="icon" className="h-8 w-8" title="Povratak na početnu">
@@ -132,11 +155,14 @@ const AdminDashboard = () => {
         </main>
 
         <MobileBottomNav currentView={currentView} onViewChange={setCurrentView} />
-      </div>;
+      </div>
+    );
   }
 
   // Desktop layout
-  return <SidebarProvider>
+  return (
+    <SidebarProvider>
+      <SEO title="Admin Dashboard" noindex />
       <div className="min-h-screen flex w-full">
         <AdminSidebar currentView={currentView} onViewChange={setCurrentView} />
         
@@ -151,6 +177,8 @@ const AdminDashboard = () => {
           </main>
         </div>
       </div>
-    </SidebarProvider>;
+    </SidebarProvider>
+  );
 };
+
 export default AdminDashboard;

@@ -12,3 +12,10 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Block admin pages from indexing
+Disallow: /admin-auth
+Disallow: /admin-dashboard
+
+# Sitemap
+Sitemap: https://pd-aktivnatura.hr/sitemap.xml
