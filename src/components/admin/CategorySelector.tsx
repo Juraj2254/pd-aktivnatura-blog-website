@@ -11,8 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, Trash2, X } from "lucide-react";
 
 interface Category {
   id: string;
@@ -25,6 +35,7 @@ interface CategorySelectorProps {
   onChange: (value: string) => void;
   type: "blog" | "trip";
   label?: string;
+  optional?: boolean;
 }
 
 export function CategorySelector({
@@ -32,6 +43,7 @@ export function CategorySelector({
   onChange,
   type,
   label = "Kategorija",
+  optional = true,
 }: CategorySelectorProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +51,8 @@ export function CategorySelector({
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newCategoryDescription, setNewCategoryDescription] = useState("");
   const [creating, setCreating] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -117,6 +131,43 @@ export function CategorySelector({
     }
   };
 
+  const handleDeleteCategory = async () => {
+    if (!categoryToDelete) return;
+
+    setDeletingId(categoryToDelete.id);
+    try {
+      const { error } = await supabase
+        .from("categories")
+        .delete()
+        .eq("id", categoryToDelete.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Uspjeh!",
+        description: "Kategorija je obrisana.",
+      });
+
+      setCategories(categories.filter((c) => c.id !== categoryToDelete.id));
+      if (value === categoryToDelete.id) {
+        onChange("");
+      }
+    } catch (error: any) {
+      toast({
+        title: "Greška",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingId(null);
+      setCategoryToDelete(null);
+    }
+  };
+
+  const handleClearSelection = () => {
+    onChange("");
+  };
+
   if (loading) {
     return (
       <div className="space-y-2">
@@ -128,22 +179,56 @@ export function CategorySelector({
 
   return (
     <div className="space-y-3">
-      <Label htmlFor="category">{label}</Label>
+      <Label htmlFor="category">{label} {optional && <span className="text-muted-foreground text-sm">(opcionalno)</span>}</Label>
       
       {!showCreateForm ? (
         <div className="space-y-2">
-          <Select value={value} onValueChange={onChange}>
-            <SelectTrigger>
-              <SelectValue placeholder="Odaberi kategoriju" />
-            </SelectTrigger>
-            <SelectContent className="bg-popover z-50">
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select value={value} onValueChange={onChange}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Odaberi kategoriju" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover z-50">
+                {categories.map((category) => (
+                  <div key={category.id} className="flex items-center justify-between pr-2">
+                    <SelectItem value={category.id} className="flex-1">
+                      {category.name}
+                    </SelectItem>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setCategoryToDelete(category);
+                      }}
+                      disabled={deletingId === category.id}
+                    >
+                      {deletingId === category.id ? (
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                      ) : (
+                        <Trash2 className="h-3 w-3" />
+                      )}
+                    </Button>
+                  </div>
+                ))}
+              </SelectContent>
+            </Select>
+            
+            {value && optional && (
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={handleClearSelection}
+                title="Ukloni odabir"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
           
           <Button
             type="button"
@@ -212,6 +297,27 @@ export function CategorySelector({
           </div>
         </div>
       )}
+
+      <AlertDialog open={!!categoryToDelete} onOpenChange={(open) => !open && setCategoryToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Obriši kategoriju</AlertDialogTitle>
+            <AlertDialogDescription>
+              Jeste li sigurni da želite obrisati kategoriju "{categoryToDelete?.name}"? 
+              Ova radnja se ne može poništiti.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Odustani</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteCategory}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Obriši
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
