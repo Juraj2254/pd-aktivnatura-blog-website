@@ -188,7 +188,7 @@ export function CategorySelector({
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="Odaberi kategoriju" />
               </SelectTrigger>
-              <SelectContent className="bg-popover z-50">
+              <SelectContent className="bg-popover">
                 {categories.map((category) => (
                   <div key={category.id} className="flex items-center justify-between pr-2">
                     <SelectItem value={category.id} className="flex-1">
