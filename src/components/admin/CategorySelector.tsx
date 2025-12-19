@@ -53,6 +53,7 @@ export function CategorySelector({
   const [creating, setCreating] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
+  const [selectOpen, setSelectOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -184,7 +185,7 @@ export function CategorySelector({
       {!showCreateForm ? (
         <div className="space-y-2">
           <div className="flex gap-2">
-            <Select value={value} onValueChange={onChange}>
+            <Select value={value} onValueChange={onChange} open={selectOpen} onOpenChange={setSelectOpen}>
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="Odaberi kategoriju" />
               </SelectTrigger>
@@ -202,6 +203,7 @@ export function CategorySelector({
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
+                        setSelectOpen(false);
                         setCategoryToDelete(category);
                       }}
                       disabled={deletingId === category.id}
