@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useToast } from "@/hooks/use-toast";
+import { useFormPersist } from "@/hooks/use-form-persist";
 import { RichTextEditor } from "./RichTextEditor";
 import { CategorySelector } from "./CategorySelector";
 import { ImageUpload } from "./ImageUpload";
@@ -17,6 +18,15 @@ import { Loader2, CalendarIcon, X } from "lucide-react";
 import { format } from "date-fns";
 import { hr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
+
+interface BlogFormData {
+  title: string;
+  categoryId: string;
+  content: string;
+  featuredImage: string;
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+}
 
 export function CreateBlogForm() {
   const [title, setTitle] = useState("");
@@ -27,6 +37,21 @@ export function CreateBlogForm() {
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  const handleRestore = useCallback((saved: BlogFormData) => {
+    if (saved.title) setTitle(saved.title);
+    if (saved.categoryId) setCategoryId(saved.categoryId);
+    if (saved.content) setContent(saved.content);
+    if (saved.featuredImage) setFeaturedImage(saved.featuredImage);
+    if (saved.startDate) setStartDate(saved.startDate);
+    if (saved.endDate) setEndDate(saved.endDate);
+  }, []);
+
+  const { clearSavedData } = useFormPersist<BlogFormData>({
+    key: "draft-blog-form",
+    values: { title, categoryId, content, featuredImage, startDate, endDate },
+    onRestore: handleRestore,
+  });
 
   const generateSlug = (text: string) => {
     return text
@@ -72,6 +97,7 @@ export function CreateBlogForm() {
         description: "Blog post je kreiran.",
       });
 
+      clearSavedData();
       setTitle("");
       setCategoryId("");
       setContent("");

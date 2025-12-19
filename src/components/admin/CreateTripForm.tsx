@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
+import { useFormPersist } from "@/hooks/use-form-persist";
 import { RichTextEditor } from "./RichTextEditor";
 import { CategorySelector } from "./CategorySelector";
 import { ImageGalleryUpload } from "./ImageGalleryUpload";
@@ -13,6 +14,17 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { CalendarIcon, Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+
+interface TripFormData {
+  title: string;
+  subtitle: string;
+  categoryId: string;
+  images: string[];
+  content: string;
+  date: Date | undefined;
+  attendees: string;
+  published: boolean;
+}
 
 export function CreateTripForm() {
   const [title, setTitle] = useState("");
@@ -25,6 +37,23 @@ export function CreateTripForm() {
   const [published, setPublished] = useState(false);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+
+  const handleRestore = useCallback((saved: TripFormData) => {
+    if (saved.title) setTitle(saved.title);
+    if (saved.subtitle) setSubtitle(saved.subtitle);
+    if (saved.categoryId) setCategoryId(saved.categoryId);
+    if (saved.images?.length) setImages(saved.images);
+    if (saved.content) setContent(saved.content);
+    if (saved.date) setDate(saved.date);
+    if (saved.attendees) setAttendees(saved.attendees);
+    if (saved.published !== undefined) setPublished(saved.published);
+  }, []);
+
+  const { clearSavedData } = useFormPersist<TripFormData>({
+    key: "draft-trip-form",
+    values: { title, subtitle, categoryId, images, content, date, attendees, published },
+    onRestore: handleRestore,
+  });
 
   const generateSlug = (text: string) => {
     return text
@@ -71,6 +100,7 @@ export function CreateTripForm() {
         description: "Trip je kreiran.",
       });
 
+      clearSavedData();
       setTitle("");
       setSubtitle("");
       setCategoryId("");

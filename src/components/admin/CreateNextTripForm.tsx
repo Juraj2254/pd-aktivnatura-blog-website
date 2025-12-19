@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -14,6 +14,7 @@ import { hr } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { ImageUpload } from "./ImageUpload";
 import { useToast } from "@/hooks/use-toast";
+import { useFormPersist } from "@/hooks/use-form-persist";
 
 const formSchema = z.object({
   title: z.string().min(1, "Naslov je obavezan").max(200, "Naslov je predugačak"),
@@ -22,6 +23,12 @@ const formSchema = z.object({
 });
 
 type FormData = z.infer<typeof formSchema>;
+
+interface NextTripFormData {
+  title: string;
+  date: Date | undefined;
+  coverImage: string;
+}
 
 export const CreateNextTripForm = () => {
   const [coverImage, setCoverImage] = useState<string>("");
@@ -40,6 +47,19 @@ export const CreateNextTripForm = () => {
   });
 
   const selectedDate = watch("date");
+  const title = watch("title") || "";
+
+  const handleRestore = useCallback((saved: NextTripFormData) => {
+    if (saved.title) setValue("title", saved.title);
+    if (saved.date) setValue("date", saved.date);
+    if (saved.coverImage) setCoverImage(saved.coverImage);
+  }, [setValue]);
+
+  const { clearSavedData } = useFormPersist<NextTripFormData>({
+    key: "draft-next-trip-form",
+    values: { title, date: selectedDate, coverImage },
+    onRestore: handleRestore,
+  });
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
@@ -70,7 +90,8 @@ export const CreateNextTripForm = () => {
         description: "Istaknuti izlet je kreiran.",
       });
 
-      // Reset form
+      // Reset form and clear saved data
+      clearSavedData();
       reset();
       setCoverImage("");
     } catch (error) {
