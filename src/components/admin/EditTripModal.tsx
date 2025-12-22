@@ -32,6 +32,7 @@ interface Trip {
   price: number | null;
   max_participants: number | null;
   featured_image: string | null;
+  gallery_images?: string[] | null;
   published: boolean;
   category_id: string | null;
   date: string | null;
@@ -50,10 +51,21 @@ export function EditTripModal({
   onOpenChange,
   onSuccess,
 }: EditTripModalProps) {
+  // Initialize images from gallery_images first, fallback to featured_image for old data
+  const getInitialImages = () => {
+    if (trip.gallery_images && trip.gallery_images.length > 0) {
+      return trip.gallery_images;
+    }
+    if (trip.featured_image) {
+      return [trip.featured_image];
+    }
+    return [];
+  };
+
   const [title, setTitle] = useState(trip.title);
   const [subtitle, setSubtitle] = useState(trip.subtitle || "");
   const [categoryId, setCategoryId] = useState(trip.category_id || "");
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<string[]>(getInitialImages());
   const [content, setContent] = useState(trip.content);
   const [date, setDate] = useState<Date | undefined>(
     trip.date ? new Date(trip.date) : undefined
@@ -72,16 +84,13 @@ export function EditTripModal({
     setDate(trip.date ? new Date(trip.date) : undefined);
     setAttendees(trip.max_participants ? trip.max_participants.toString() : "");
     
-    // Parse images from featured_image field (JSON array or single URL)
-    try {
-      if (trip.featured_image) {
-        const parsed = JSON.parse(trip.featured_image);
-        setImages(Array.isArray(parsed) ? parsed : [trip.featured_image]);
-      } else {
-        setImages([]);
-      }
-    } catch {
-      setImages(trip.featured_image ? [trip.featured_image] : []);
+    // Load images from gallery_images first, fallback to featured_image
+    if (trip.gallery_images && trip.gallery_images.length > 0) {
+      setImages(trip.gallery_images);
+    } else if (trip.featured_image) {
+      setImages([trip.featured_image]);
+    } else {
+      setImages([]);
     }
   }, [trip]);
 
@@ -118,6 +127,7 @@ export function EditTripModal({
           content,
           category_id: categoryId,
           featured_image: images.length > 0 ? images[0] : null,
+          gallery_images: images.length > 0 ? images : null,
           date: date ? date.toISOString() : null,
           max_participants: attendees ? parseInt(attendees) : null,
           updated_at: new Date().toISOString(),
@@ -184,6 +194,7 @@ export function EditTripModal({
             images={images}
             onChange={setImages}
             label="Galerija Slika"
+            maxImages={50}
           />
 
           <div>

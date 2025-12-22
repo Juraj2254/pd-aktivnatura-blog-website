@@ -3,11 +3,12 @@ import { useParams, Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
-import { Calendar, Users, MapPin, Loader2, ArrowLeft } from "lucide-react";
+import { Calendar, Users, MapPin, Loader2, ArrowLeft, ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { TypewriterEffectSmooth } from "@/components/ui/typewriter-effect";
 import { SEO } from "@/components/SEO";
+import { ImageLightbox } from "@/components/ui/image-lightbox";
 
 interface Trip {
   id: string;
@@ -15,6 +16,7 @@ interface Trip {
   subtitle: string | null;
   content: string | null;
   featured_image: string | null;
+  gallery_images: string[] | null;
   date: string | null;
   max_participants: number | null;
   location: string | null;
@@ -30,6 +32,8 @@ const TripDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const [trip, setTrip] = useState<Trip | null>(null);
   const [loading, setLoading] = useState(true);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useEffect(() => {
     if (slug) {
@@ -83,6 +87,22 @@ const TripDetail = () => {
     return html.replace(/<[^>]*>/g, "").substring(0, 155);
   };
 
+  // Get all gallery images (fallback to featured_image for old data)
+  const getGalleryImages = (): string[] => {
+    if (trip?.gallery_images && trip.gallery_images.length > 0) {
+      return trip.gallery_images;
+    }
+    if (trip?.featured_image) {
+      return [trip.featured_image];
+    }
+    return [];
+  };
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen">
@@ -115,6 +135,8 @@ const TripDetail = () => {
     );
   }
 
+  const galleryImages = getGalleryImages();
+
   return (
     <div className="min-h-screen">
       <SEO
@@ -126,14 +148,14 @@ const TripDetail = () => {
       />
       <Navbar />
 
-      {/* Hero Image */}
-      <div className="relative h-[40vh] md:h-[50vh] overflow-hidden">
+      {/* Hero Image - Responsive with aspect ratio */}
+      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
         <img
           src={trip.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070"}
           alt={trip.title}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
         
         {/* Back Button */}
         <div className="absolute top-4 left-4 md:top-8 md:left-8">
@@ -144,23 +166,25 @@ const TripDetail = () => {
             </Button>
           </Link>
         </div>
+
+        {/* Title overlay on hero */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 lg:p-12">
+          <div className="container mx-auto">
+            {trip.categories && (
+              <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium mb-3">
+                {trip.categories.name}
+              </span>
+            )}
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white drop-shadow-lg leading-tight max-w-4xl">
+              {trip.title}
+            </h1>
+          </div>
+        </div>
       </div>
 
       {/* Content */}
       <article className="container mx-auto px-4 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-lg p-6 md:p-10 lg:p-12">
-          {/* Category Badge */}
-          {trip.categories && (
-            <span className="inline-block bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-medium mb-6">
-              {trip.categories.name}
-            </span>
-          )}
-
-          {/* Title */}
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground leading-tight">
-            {trip.title}
-          </h1>
-
+        <div className="max-w-4xl mx-auto bg-card rounded-lg shadow-lg p-6 md:p-10 lg:p-12 -mt-8 md:-mt-16 relative z-10">
           {/* Subtitle */}
           {trip.subtitle && (
             <p className="text-lg md:text-xl text-muted-foreground mb-10">
@@ -206,9 +230,38 @@ const TripDetail = () => {
           {/* Content */}
           {trip.content && (
             <div 
-              className="prose prose-base md:prose-lg max-w-none dark:prose-invert mb-12"
+              className="prose prose-base md:prose-lg max-w-none dark:prose-invert prose-img:rounded-lg prose-img:max-w-full prose-img:h-auto mb-12"
               dangerouslySetInnerHTML={{ __html: trip.content }}
             />
+          )}
+
+          {/* Image Gallery */}
+          {galleryImages.length > 1 && (
+            <div className="mt-12 pt-10 border-t border-border">
+              <div className="flex items-center gap-2 mb-6">
+                <ImageIcon className="h-5 w-5 text-primary" />
+                <h2 className="text-xl md:text-2xl font-bold">Galerija Fotografija</h2>
+                <span className="text-sm text-muted-foreground">({galleryImages.length} slika)</span>
+              </div>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+                {galleryImages.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => openLightbox(index)}
+                    className="relative aspect-square overflow-hidden rounded-lg group cursor-pointer focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    <img
+                      src={image}
+                      alt={`${trip.title} - slika ${index + 1}`}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
 
           {/* CTA */}
@@ -236,6 +289,14 @@ const TripDetail = () => {
           </div>
         </div>
       </article>
+
+      {/* Lightbox */}
+      <ImageLightbox
+        images={galleryImages}
+        initialIndex={lightboxIndex}
+        open={lightboxOpen}
+        onOpenChange={setLightboxOpen}
+      />
 
       <div className="py-16" />
       
