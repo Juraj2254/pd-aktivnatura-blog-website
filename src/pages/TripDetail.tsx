@@ -193,40 +193,42 @@ const TripDetail = () => {
             </p>
           )}
 
-          {/* Meta Info Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-6 md:p-8 bg-muted/30 rounded-lg border border-border">
-            {trip.date && (
-              <div className="flex flex-col">
-                <Calendar className="h-5 w-5 text-primary mb-2" />
-                <span className="text-xs text-muted-foreground">Datum</span>
-                <span className="text-sm font-medium">{formatDate(trip.date)}</span>
-              </div>
-            )}
+          {/* Meta Info Grid - only show if at least one field has a value */}
+          {(trip.date || trip.max_participants || trip.location || trip.duration) && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10 p-6 md:p-8 bg-muted/30 rounded-lg border border-border">
+              {trip.date && (
+                <div className="flex flex-col">
+                  <Calendar className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground">Datum</span>
+                  <span className="text-sm font-medium">{formatDate(trip.date)}</span>
+                </div>
+              )}
+              
+              {trip.max_participants && (
+                <div className="flex flex-col">
+                  <Users className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground">Sudionici</span>
+                  <span className="text-sm font-medium">{trip.max_participants}</span>
+                </div>
+              )}
+              
+              {trip.location && (
+                <div className="flex flex-col">
+                  <MapPin className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground">Lokacija</span>
+                  <span className="text-sm font-medium">{trip.location}</span>
+                </div>
+              )}
             
-            {trip.max_participants && (
-              <div className="flex flex-col">
-                <Users className="h-5 w-5 text-primary mb-2" />
-                <span className="text-xs text-muted-foreground">Sudionici</span>
-                <span className="text-sm font-medium">{trip.max_participants}</span>
-              </div>
-            )}
-            
-            {trip.location && (
-              <div className="flex flex-col">
-                <MapPin className="h-5 w-5 text-primary mb-2" />
-                <span className="text-xs text-muted-foreground">Lokacija</span>
-                <span className="text-sm font-medium">{trip.location}</span>
-              </div>
-            )}
-            
-            {trip.duration && (
-              <div className="flex flex-col">
-                <Calendar className="h-5 w-5 text-primary mb-2" />
-                <span className="text-xs text-muted-foreground">Trajanje</span>
-                <span className="text-sm font-medium">{trip.duration}</span>
-              </div>
-            )}
-          </div>
+              {trip.duration && (
+                <div className="flex flex-col">
+                  <Calendar className="h-5 w-5 text-primary mb-2" />
+                  <span className="text-xs text-muted-foreground">Trajanje</span>
+                  <span className="text-sm font-medium">{trip.duration}</span>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Content */}
           {trip.content && (

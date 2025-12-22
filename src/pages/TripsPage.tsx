@@ -120,7 +120,7 @@ const TripsPage = () => {
               slug: trip.slug,
               src: trip.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070",
               category: trip.categories?.name,
-              date: formatDate(trip.date),
+              date: trip.date ? formatDate(trip.date) : undefined,
               attendees: trip.max_participants || undefined,
             }))}
           />
