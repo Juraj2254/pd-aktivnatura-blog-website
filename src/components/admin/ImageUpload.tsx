@@ -11,6 +11,7 @@ interface ImageUploadProps {
   value?: string;
   onChange?: (url: string) => void;
   onImageUploaded?: (url: string) => void;
+  onImagesUploaded?: (urls: string[]) => void; // Batch callback for multiple uploads
   label?: string;
   acceptMultiple?: boolean;
   bucket?: string;
@@ -26,7 +27,8 @@ const MAX_FILES = 50;
 export function ImageUpload({ 
   value,
   onChange,
-  onImageUploaded, 
+  onImageUploaded,
+  onImagesUploaded,
   label = "Slika",
   acceptMultiple = false,
   bucket = "trip-blog-images",
@@ -137,7 +139,7 @@ export function ImageUpload({
     setUploadProgress({ current: 0, total: valid.length });
 
     try {
-      let successCount = 0;
+      const uploadedUrls: string[] = [];
 
       for (let i = 0; i < valid.length; i++) {
         const file = valid[i];
@@ -145,24 +147,32 @@ export function ImageUpload({
         
         const url = await uploadFile(file);
         if (url) {
-          successCount++;
-          handleImageUpdate(url);
+          uploadedUrls.push(url);
+          // For single uploads or when no batch callback, call individual callback
+          if (!acceptMultiple || !onImagesUploaded) {
+            handleImageUpdate(url);
+          }
         }
       }
 
-      if (successCount > 0) {
+      // For batch uploads, call the batch callback once with all URLs
+      if (acceptMultiple && onImagesUploaded && uploadedUrls.length > 0) {
+        onImagesUploaded(uploadedUrls);
+      }
+
+      if (uploadedUrls.length > 0) {
         toast({
           title: "Uspjeh!",
-          description: successCount === 1 
+          description: uploadedUrls.length === 1 
             ? "Slika je uploadana." 
-            : `${successCount} slika je uploadano.`,
+            : `${uploadedUrls.length} slika je uploadano.`,
         });
       }
 
-      if (successCount < valid.length) {
+      if (uploadedUrls.length < valid.length) {
         toast({
           title: "Upozorenje",
-          description: `${valid.length - successCount} slika nije uspješno uploadano.`,
+          description: `${valid.length - uploadedUrls.length} slika nije uspješno uploadano.`,
           variant: "destructive",
         });
       }

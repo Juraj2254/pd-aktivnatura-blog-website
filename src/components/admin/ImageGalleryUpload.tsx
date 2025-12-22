@@ -17,9 +17,15 @@ export function ImageGalleryUpload({
   label = "Galerija Slika",
   maxImages = DEFAULT_MAX_IMAGES,
 }: ImageGalleryUploadProps) {
+  const handleAddImages = (urls: string[]) => {
+    const availableSlots = maxImages - images.length;
+    if (availableSlots <= 0) return;
+    const urlsToAdd = urls.slice(0, availableSlots);
+    onChange([...images, ...urlsToAdd]);
+  };
+
   const handleAddImage = (url: string) => {
-    if (images.length >= maxImages) return;
-    onChange([...images, url]);
+    handleAddImages([url]);
   };
 
   const handleRemoveImage = (index: number) => {
@@ -89,6 +95,7 @@ export function ImageGalleryUpload({
         </div>
       ) : (
         <ImageUpload
+          onImagesUploaded={handleAddImages}
           onImageUploaded={handleAddImage}
           label=""
           acceptMultiple={true}
