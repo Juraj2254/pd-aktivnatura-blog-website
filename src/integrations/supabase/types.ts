@@ -155,6 +155,7 @@ export type Database = {
           difficulty: string | null
           duration: string | null
           featured_image: string | null
+          gallery_images: string[] | null
           id: string
           location: string | null
           max_participants: number | null
@@ -175,6 +176,7 @@ export type Database = {
           difficulty?: string | null
           duration?: string | null
           featured_image?: string | null
+          gallery_images?: string[] | null
           id?: string
           location?: string | null
           max_participants?: number | null
@@ -195,6 +197,7 @@ export type Database = {
           difficulty?: string | null
           duration?: string | null
           featured_image?: string | null
+          gallery_images?: string[] | null
           id?: string
           location?: string | null
           max_participants?: number | null

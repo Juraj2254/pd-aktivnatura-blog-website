@@ -87,6 +87,7 @@ export function CreateTripForm() {
         content,
         category_id: categoryId,
         featured_image: images.length > 0 ? images[0] : null,
+        gallery_images: images.length > 0 ? images : null,
         date: date ? date.toISOString() : null,
         max_participants: attendees ? parseInt(attendees) : null,
         created_by: user?.id,
