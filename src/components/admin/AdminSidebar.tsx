@@ -1,4 +1,4 @@
-import { Home, FileText, MapPin, LogOut, PlusCircle, Edit, Star } from "lucide-react";
+import { Home, FileText, MapPin, LogOut, PlusCircle, Edit, Star, Users } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -138,6 +138,25 @@ export function AdminSidebar({ currentView, onViewChange }: AdminSidebarProps) {
                 >
                   <Edit className="h-4 w-4" />
                   {open && <span className="ml-2">Uredi Istaknuti Izlet</span>}
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-xs sm:text-sm px-2">Administracija</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  onClick={() => onViewChange("manage-users")}
+                  isActive={currentView === "manage-users"}
+                  tooltip={!open ? "Upravljanje korisnicima" : undefined}
+                  className="text-sm"
+                >
+                  <Users className="h-4 w-4" />
+                  {open && <span className="ml-2">Upravljanje korisnicima</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

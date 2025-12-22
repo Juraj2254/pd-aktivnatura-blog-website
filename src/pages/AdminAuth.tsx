@@ -98,6 +98,12 @@ const AdminAuth = () => {
 
     if (data) {
       navigate("/admin-dashboard");
+    } else if (session) {
+      // User is logged in but doesn't have admin role
+      toast({
+        title: "Pristup na čekanju",
+        description: "Vaš račun je registriran, ali nema admin prava. Kontaktirajte postojećeg administratora za odobrenje.",
+      });
     }
   };
 
