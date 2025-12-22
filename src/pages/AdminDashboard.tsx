@@ -11,10 +11,13 @@ import { EditBlogsList } from "@/components/admin/EditBlogsList";
 import { EditTripsList } from "@/components/admin/EditTripsList";
 import { CreateNextTripForm } from "@/components/admin/CreateNextTripForm";
 import { EditNextTripList } from "@/components/admin/EditNextTripList";
+import { UserManagement } from "@/components/admin/UserManagement";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SEO } from "@/components/SEO";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { ShieldX } from "lucide-react";
 
 const AdminDashboard = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -88,7 +91,18 @@ const AdminDashboard = () => {
   }
 
   if (!isAdmin) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <SEO title="Pristup odbijen" noindex />
+        <Alert variant="destructive" className="max-w-md">
+          <ShieldX className="h-5 w-5" />
+          <AlertTitle>Pristup odbijen</AlertTitle>
+          <AlertDescription>
+            Nemate admin prava za pristup ovoj stranici. Kontaktirajte postojećeg administratora za dodjelu pristupa.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
   }
 
   const renderContent = () => {
@@ -123,6 +137,8 @@ const AdminDashboard = () => {
             <EditNextTripList />
           </div>
         );
+      case "manage-users":
+        return <UserManagement />;
       default:
         return (
           <div className="w-full max-w-[800px] mx-auto">
