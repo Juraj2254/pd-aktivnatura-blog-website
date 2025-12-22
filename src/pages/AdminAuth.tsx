@@ -88,7 +88,7 @@ const AdminAuth = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const checkAdminRole = async (userId: string) => {
+  const checkAdminRole = async (userId: string, retryCount = 0) => {
     const { data, error } = await supabase
       .from("user_roles")
       .select("role")
@@ -98,12 +98,11 @@ const AdminAuth = () => {
 
     if (data) {
       navigate("/admin-dashboard");
-    } else if (session) {
-      // User is logged in but doesn't have admin role
-      toast({
-        title: "Pristup na čekanju",
-        description: "Vaš račun je registriran, ali nema admin prava. Kontaktirajte postojećeg administratora za odobrenje.",
-      });
+    } else if (retryCount < 3) {
+      // Retry after a short delay to allow the trigger to complete
+      setTimeout(() => {
+        checkAdminRole(userId, retryCount + 1);
+      }, 500);
     }
   };
 
