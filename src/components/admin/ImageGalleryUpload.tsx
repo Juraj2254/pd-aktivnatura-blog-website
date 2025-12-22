@@ -1,5 +1,5 @@
 import { Label } from "@/components/ui/label";
-import { X, Image as ImageIcon, AlertCircle } from "lucide-react";
+import { X, Image as ImageIcon, AlertCircle, Star } from "lucide-react";
 import { ImageUpload } from "./ImageUpload";
 
 interface ImageGalleryUploadProps {
@@ -30,6 +30,14 @@ export function ImageGalleryUpload({
 
   const handleRemoveImage = (index: number) => {
     onChange(images.filter((_, i) => i !== index));
+  };
+
+  const handleSetAsCover = (index: number) => {
+    if (index === 0) return;
+    const newImages = [...images];
+    const [selectedImage] = newImages.splice(index, 1);
+    newImages.unshift(selectedImage);
+    onChange(newImages);
   };
 
   const remainingSlots = maxImages - images.length;
@@ -76,6 +84,18 @@ export function ImageGalleryUpload({
                 <span className="absolute bottom-1 left-1 bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded">
                   Naslovna
                 </span>
+              )}
+              
+              {/* Set as cover button */}
+              {index !== 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleSetAsCover(index)}
+                  className="absolute bottom-1 left-1 p-1.5 bg-primary text-primary-foreground rounded text-xs opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
+                  title="Postavi kao naslovnu sliku"
+                >
+                  <Star className="h-3 w-3" />
+                </button>
               )}
             </div>
           ))}
