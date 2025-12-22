@@ -149,7 +149,7 @@ const TripDetail = () => {
       <Navbar />
 
       {/* Hero Image - Responsive with aspect ratio */}
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] overflow-hidden">
+      <div className="relative w-full h-[50vh] sm:h-[55vh] md:h-[60vh] lg:h-[65vh] xl:h-[70vh] overflow-hidden">
         <img
           src={trip.featured_image || "https://images.unsplash.com/photo-1551632811-561732d1e306?q=80&w=2070"}
           alt={trip.title}
@@ -171,7 +171,7 @@ const TripDetail = () => {
         <div className="absolute bottom-0 left-0 right-0 p-4 md:p-8 lg:p-12">
           <div className="container mx-auto">
             {trip.categories && (
-              <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-medium mb-3">
+              <span className="inline-block bg-black/40 text-white px-3 py-1 rounded-lg text-sm font-medium mb-3 backdrop-blur-sm">
                 {trip.categories.name}
               </span>
             )}
