@@ -6,25 +6,96 @@
     <title>AktivNatura - Planinarsko Društvo | Otkrij prirodu s nama</title>
     <meta name="description" content="Pridruži se AktivNatura planinskom društvu i istraži najljepše planine Hrvatske. Organiziramo redovite izlete za sve uzraste i razine kondicije." />
     <meta name="author" content="Planinarsko Društvo AktivNatura" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="language" content="Croatian" />
+    <meta http-equiv="content-language" content="hr" />
+    <meta name="geo.region" content="HR" />
+    <meta name="geo.placename" content="Hrvatska" />
 
+    <!-- Open Graph -->
     <meta property="og:title" content="AktivNatura - Planinarsko Društvo" />
     <meta property="og:description" content="Otkrij prirodu s nama - pridruži se AktivNatura klubu i istraži najljepše planine Hrvatske" />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="https://pd-aktivnatura.hr/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://pd-aktivnatura.hr" />
     <meta property="og:site_name" content="AktivNatura - Planinarsko Društvo" />
     <meta property="og:locale" content="hr_HR" />
 
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="AktivNatura - Planinarsko Društvo" />
     <meta name="twitter:description" content="Otkrij prirodu s nama - pridruži se AktivNatura klubu i istraži najljepše planine Hrvatske" />
     <meta name="twitter:image" content="https://pd-aktivnatura.hr/og-image.jpg" />
 
     <link rel="canonical" href="https://pd-aktivnatura.hr" />
+
+    <!-- JSON-LD Structured Data for Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "AktivNatura - Planinarsko Društvo",
+      "alternateName": "PD AktivNatura",
+      "url": "https://pd-aktivnatura.hr",
+      "logo": "https://pd-aktivnatura.hr/og-image.jpg",
+      "description": "Pridruži se AktivNatura planinskom društvu i istraži najljepše planine Hrvatske. Organiziramo redovite izlete za sve uzraste i razine kondicije.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "HR"
+      }
+    }
+    </script>
+
+    <!-- JSON-LD Structured Data for WebSite -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "AktivNatura - Planinarsko Društvo",
+      "url": "https://pd-aktivnatura.hr",
+      "description": "Pridruži se AktivNatura planinskom društvu i istraži najljepše planine Hrvatske.",
+      "inLanguage": "hr-HR",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://pd-aktivnatura.hr/izleti",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
   </head>
 
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- Fallback content for search engines that don't execute JavaScript -->
+    <noscript>
+      <div style="padding: 40px; max-width: 800px; margin: 0 auto; font-family: system-ui, sans-serif;">
+        <h1>AktivNatura - Planinarsko Društvo</h1>
+        <p>Dobrodošli na web stranicu AktivNatura planinskog društva! Pridruži nam se i istraži najljepše planine Hrvatske.</p>
+        
+        <h2>Naše Usluge</h2>
+        <ul>
+          <li><strong>Izleti</strong> - Organiziramo redovite planirane izlete i avanture u prirodi za sve uzraste i razine kondicije.</li>
+          <li><strong>Blog</strong> - Čitajte naše priče, savjete i inspiraciju iz svijeta planinarenja.</li>
+          <li><strong>Galerija</strong> - Pregledajte fotografije s naših izleta i planinarskih tura.</li>
+        </ul>
+        
+        <h2>Kontakt</h2>
+        <p>Za više informacija o našim aktivnostima, posjetite nas na <a href="https://pd-aktivnatura.hr">pd-aktivnatura.hr</a></p>
+        
+        <nav>
+          <h3>Navigacija</h3>
+          <ul>
+            <li><a href="/">Početna</a></li>
+            <li><a href="/izleti">Izleti</a></li>
+            <li><a href="/blog">Blog</a></li>
+            <li><a href="/kontakt">Kontakt</a></li>
+          </ul>
+        </nav>
+      </div>
+    </noscript>
   </body>
 </html>

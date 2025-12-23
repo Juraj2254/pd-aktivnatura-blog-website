@@ -110,9 +110,13 @@ const BlogPage = () => {
               ))}
             </div>
           ) : posts.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-16" role="status" aria-live="polite">
+              {/* SEO-friendly message - this content is visible to crawlers */}
               <p className="text-xl text-muted-foreground">
-                Još nema objavljenih članaka.
+                Trenutno nema objavljenih članaka. Posjetite nas uskoro za nove priče i savjete iz svijeta planinarenja.
+              </p>
+              <p className="text-sm text-muted-foreground mt-4">
+                U međuvremenu, istražite naše <a href="/izleti" className="text-primary hover:underline">planirane izlete</a>.
               </p>
             </div>
           ) : (
