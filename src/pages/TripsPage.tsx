@@ -107,9 +107,13 @@ const TripsPage = () => {
       {/* Trips Gallery */}
       <main className="container mx-auto px-4 py-12 md:py-16">
         {trips.length === 0 ? (
-          <div className="text-center py-16">
+          <div className="text-center py-16" role="status" aria-live="polite">
+            {/* SEO-friendly message - this content is visible to crawlers */}
             <p className="text-lg text-muted-foreground">
-              Trenutno nema dostupnih izleta. Provjerite uskoro!
+              Trenutno nema dostupnih izleta. Pratite nas za nove avanture u prirodi!
+            </p>
+            <p className="text-sm text-muted-foreground mt-4">
+              U međuvremenu, pročitajte naš <a href="/blog" className="text-primary hover:underline">blog</a> za savjete i priče iz planinarenja.
             </p>
           </div>
         ) : (

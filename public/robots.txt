@@ -1,8 +1,14 @@
+# AktivNatura - Planinarsko Društvo
+# https://pd-aktivnatura.hr
+
+# Allow all major search engines
 User-agent: Googlebot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Bingbot
 Allow: /
+Crawl-delay: 1
 
 User-agent: Twitterbot
 Allow: /
@@ -10,12 +16,28 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: LinkedInBot
+Allow: /
+
 User-agent: *
 Allow: /
+Crawl-delay: 2
 
 # Block admin pages from indexing
 Disallow: /admin-auth
 Disallow: /admin-dashboard
+Disallow: /admin/*
 
-# Dynamic Sitemap (edge function)
+# Block any query string pages that might cause duplicate content
+Disallow: /*?*
+
+# Allow important static assets
+Allow: /og-image.jpg
+Allow: /favicon.ico
+
+# Sitemap locations
+Sitemap: https://pd-aktivnatura.hr/sitemap.xml
 Sitemap: https://usumovgvzafrgwvsqzss.supabase.co/functions/v1/sitemap
+
+# Host
+Host: https://pd-aktivnatura.hr
