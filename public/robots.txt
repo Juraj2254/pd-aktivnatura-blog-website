@@ -35,8 +35,7 @@ Disallow: /*?*
 Allow: /og-image.jpg
 Allow: /favicon.ico
 
-# Sitemap locations
-Sitemap: https://pd-aktivnatura.hr/sitemap.xml
+# Sitemap location
 Sitemap: https://usumovgvzafrgwvsqzss.supabase.co/functions/v1/sitemap
 
 # Host

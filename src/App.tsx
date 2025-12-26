@@ -12,7 +12,6 @@ import ContactPage from "./pages/ContactPage";
 import AdminAuth from "./pages/AdminAuth";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
-import SitemapRedirect from "./pages/SitemapRedirect";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +30,6 @@ const App = () => (
           <Route path="/kontakt" element={<ContactPage />} />
           <Route path="/admin-auth" element={<AdminAuth />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/sitemap.xml" element={<SitemapRedirect />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
