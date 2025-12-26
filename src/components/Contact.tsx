@@ -1,4 +1,27 @@
+import { useState } from "react";
+import { Copy, Check } from "lucide-react";
+import { toast } from "sonner";
+
 export const Contact = () => {
+  const [copied, setCopied] = useState(false);
+
+  const bankDetails = {
+    iban: "HR1023600001102594146",
+    ibanFormatted: "HR10 2360 0001 1025 9414 6",
+    recipient: "Planinarsko društvo Aktivnatura",
+    bank: "Zagrebačka banka",
+  };
+
+  const copyIban = async () => {
+    try {
+      await navigator.clipboard.writeText(bankDetails.iban);
+      setCopied(true);
+      toast.success("IBAN kopiran u međuspremnik!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      toast.error("Greška pri kopiranju IBAN-a");
+    }
+  };
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
@@ -55,6 +78,56 @@ export const Contact = () => {
               <div className="text-sm text-muted-foreground mb-1">Lokacija</div>
               <div className="text-sm font-medium text-primary hover:underline">TRG FRANCUSKE REPUBLIKE 11</div>
             </a>
+          </div>
+
+          {/* Bank Payment Section */}
+          <div className="mt-12 animate-fade-in" style={{ animationDelay: "600ms" }}>
+            <div className="text-center mb-6">
+              <div className="inline-block mb-2">
+                <span className="text-3xl">🏦</span>
+              </div>
+              <h3 className="text-2xl font-semibold text-primary">Podaci za uplatu</h3>
+            </div>
+            
+            <div className="bg-card/40 backdrop-blur-sm rounded-xl border border-border/50 p-6 space-y-4">
+              {/* IBAN Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-border/30">
+                <div>
+                  <div className="text-sm text-muted-foreground mb-1">IBAN</div>
+                  <div className="font-mono text-sm sm:text-base font-medium text-foreground tracking-wide">
+                    {bankDetails.ibanFormatted}
+                  </div>
+                </div>
+                <button
+                  onClick={copyIban}
+                  className="flex items-center gap-2 px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-all duration-200 text-sm font-medium self-start sm:self-auto"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Kopirano!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Kopiraj
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {/* Recipient Row */}
+              <div className="pb-4 border-b border-border/30">
+                <div className="text-sm text-muted-foreground mb-1">Primatelj</div>
+                <div className="font-medium text-foreground">{bankDetails.recipient}</div>
+              </div>
+
+              {/* Bank Row */}
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Banka</div>
+                <div className="font-medium text-foreground">{bankDetails.bank}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
