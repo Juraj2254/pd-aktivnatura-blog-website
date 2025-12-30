@@ -113,6 +113,34 @@ const BlogPostDetail = () => {
     );
   }
 
+  // Article schema for blog posts
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": post.title,
+    "description": post.excerpt || getPlainText(post.content),
+    "image": post.featured_image || "https://pd-aktivnatura.hr/og-image.jpg",
+    "datePublished": post.published_at || post.created_at,
+    "dateModified": post.published_at || post.created_at,
+    "author": {
+      "@type": "Organization",
+      "name": "Planinarsko Društvo AktivNatura",
+      "url": "https://pd-aktivnatura.hr"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Planinarsko Društvo AktivNatura",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://pd-aktivnatura.hr/og-image.jpg"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://pd-aktivnatura.hr/blog/${slug}`
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <SEO
@@ -121,7 +149,11 @@ const BlogPostDetail = () => {
         canonical={`/blog/${slug}`}
         ogImage={post.featured_image || undefined}
         ogType="article"
+        articlePublishedTime={post.published_at || post.created_at}
+        articleAuthor="Planinarsko Društvo AktivNatura"
       />
+      {/* Article Schema */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <Navbar />
       
       <main className="flex-1 pt-20 pb-16">

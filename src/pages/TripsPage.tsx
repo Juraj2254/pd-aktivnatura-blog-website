@@ -93,7 +93,10 @@ const TripsPage = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section 
+        className="relative h-[60vh] min-h-[400px] flex items-center justify-center overflow-hidden"
+        aria-label="Planinski pejzaž - pozadinska slika planinskih izleta"
+      >
         <div 
           className="absolute inset-0 bg-cover bg-center"
           style={{
@@ -101,6 +104,14 @@ const TripsPage = () => {
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-background/50 to-background/90" />
+        </div>
+        <div className="relative z-10 text-center px-4">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4">
+            Planirani Izleti
+          </h1>
+          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            Istražite najljepše planine Hrvatske s AktivNatura društvom
+          </p>
         </div>
       </section>
 

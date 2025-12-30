@@ -27,9 +27,54 @@ const organizationSchema = {
   "description": DEFAULT_DESCRIPTION,
   "address": {
     "@type": "PostalAddress",
+    "streetAddress": "Trg Francuske Republike 11",
+    "addressLocality": "Zagreb",
+    "postalCode": "10000",
     "addressCountry": "HR"
   },
-  "sameAs": []
+  "email": "pd.aktivnatura@gmail.com",
+  "telephone": "+385-98-974-9478",
+  "sameAs": [
+    "https://www.facebook.com/aktivnatura",
+    "https://www.instagram.com/aktivnatura"
+  ]
+};
+
+// LocalBusiness schema for local SEO
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "SportsClub",
+  "name": "Planinarsko Društvo AktivNatura",
+  "alternateName": "PD AktivNatura",
+  "url": BASE_URL,
+  "logo": `${BASE_URL}/og-image.jpg`,
+  "image": `${BASE_URL}/og-image.jpg`,
+  "description": DEFAULT_DESCRIPTION,
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Trg Francuske Republike 11",
+    "addressLocality": "Zagreb",
+    "postalCode": "10000",
+    "addressCountry": "HR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": 45.8150,
+    "longitude": 15.9819
+  },
+  "email": "pd.aktivnatura@gmail.com",
+  "telephone": "+385-98-974-9478",
+  "priceRange": "$$",
+  "openingHoursSpecification": {
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    "opens": "09:00",
+    "closes": "17:00"
+  },
+  "sameAs": [
+    "https://www.facebook.com/aktivnatura",
+    "https://www.instagram.com/aktivnatura"
+  ]
 };
 
 const websiteSchema = {
@@ -128,6 +173,9 @@ export const SEO = ({
       </script>
       <script type="application/ld+json">
         {JSON.stringify(websiteSchema)}
+      </script>
+      <script type="application/ld+json">
+        {JSON.stringify(localBusinessSchema)}
       </script>
       {breadcrumbSchema && (
         <script type="application/ld+json">

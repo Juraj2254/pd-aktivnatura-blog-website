@@ -137,6 +137,36 @@ const TripDetail = () => {
 
   const galleryImages = getGalleryImages();
 
+  // Event schema for trips (helps Google show in Events carousel)
+  const eventSchema = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": trip.title,
+    "description": trip.subtitle || getPlainText(trip.content) || `Pridruži se izletu ${trip.title} s AktivNatura planinskim društvom.`,
+    "image": trip.featured_image || "https://pd-aktivnatura.hr/og-image.jpg",
+    "startDate": trip.date || undefined,
+    "eventStatus": "https://schema.org/EventScheduled",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "location": trip.location ? {
+      "@type": "Place",
+      "name": trip.location,
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "HR"
+      }
+    } : undefined,
+    "organizer": {
+      "@type": "Organization",
+      "name": "Planinarsko Društvo AktivNatura",
+      "url": "https://pd-aktivnatura.hr"
+    },
+    "performer": {
+      "@type": "Organization",
+      "name": "Planinarsko Društvo AktivNatura"
+    },
+    "maximumAttendeeCapacity": trip.max_participants || undefined
+  };
+
   return (
     <div className="min-h-screen">
       <SEO
@@ -146,6 +176,8 @@ const TripDetail = () => {
         ogImage={trip.featured_image || undefined}
         ogType="article"
       />
+      {/* Event Schema */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(eventSchema) }} />
       <Navbar />
 
       {/* Hero Image (featured image / cover) */}
