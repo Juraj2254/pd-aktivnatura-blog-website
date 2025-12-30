@@ -74,7 +74,7 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
                 <figure key={`left-${idx}`} className='w-full h-48 sm:h-56 md:h-96'>
                   <img
                     src={src}
-                    alt={`Planinarenje ${idx + 1}`}
+                    alt={`AktivNatura planinarski izlet kroz hrvatske planine - fotografija ${idx + 1}`}
                     loading="lazy"
                     decoding="async"
                     fetchPriority="low"
@@ -90,7 +90,7 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
                 <figure key={`center-${idx}`} className='w-full h-48 sm:h-56 md:h-full'>
                   <img
                     src={src}
-                    alt={`Planinarenje sredina ${idx + 1}`}
+                    alt={`Planinarenje s AktivNatura društvom - prirodni krajolici Hrvatske ${idx + 1}`}
                     loading="lazy"
                     decoding="async"
                     fetchPriority="low"
@@ -106,7 +106,7 @@ const TripsGallery = forwardRef<HTMLElement, TripsGalleryProps>(({ images }, ref
                 <figure key={`right-${idx}`} className='w-full h-48 sm:h-56 md:h-96'>
                   <img
                     src={src}
-                    alt={`Planinarenje desno ${idx + 1}`}
+                    alt={`Avanture u prirodi s planinskim društvom AktivNatura - slika ${idx + 1}`}
                     loading="lazy"
                     decoding="async"
                     fetchPriority="low"

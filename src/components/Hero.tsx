@@ -3,11 +3,16 @@ import heroImage from "@/assets/hero-mountains.jpg";
 
 export const Hero = () => {
   return (
-    <section className="relative h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden">
+    <section 
+      className="relative h-[70vh] md:h-[80vh] flex items-center justify-center overflow-hidden"
+      aria-label="Planinarsko Društvo AktivNatura - planinski pejzaž Hrvatske"
+    >
       {/* Background Image */}
       <div 
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${heroImage})` }}
+        role="img"
+        aria-label="Planinski vrhovi i prirodni krajolici Hrvatske"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
       </div>

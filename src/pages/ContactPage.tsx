@@ -13,6 +13,8 @@ const ContactPage = () => {
       />
       <Navbar />
       <main className="pt-16">
+        {/* Visually hidden H1 for SEO - Contact component uses H2 */}
+        <h1 className="sr-only">Kontaktirajte Planinarsko Društvo AktivNatura</h1>
         <Contact />
       </main>
       <Footer />
